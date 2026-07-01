@@ -557,7 +557,7 @@ void sim::check_omega(void)
   double masstot;
   MPI_Allreduce(&mass, &masstot, 1, MPI_DOUBLE, MPI_SUM, Communicator);
 
-  double omega = masstot * (LONG_Z * LONG_Y * LONG_Z) / (All.BoxSize * All.BoxSize * All.BoxSize) /
+  double omega = masstot * (LONG_X * LONG_Y * LONG_Z) / (All.BoxSize * All.BoxSize * All.BoxSize) /
                  (3 * All.Hubble * All.Hubble / (8 * M_PI * All.G));
   if(fabs(omega - All.Omega0) > 1.0e-2)
     {
