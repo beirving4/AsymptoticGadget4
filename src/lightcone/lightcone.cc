@@ -331,13 +331,6 @@ bool lightcone::lightcone_is_cone_member(int i, int cone)
 
   Lp->signedintpos_to_pos((MySignedIntPosType *)Lp->P[i].IntPos, pos.da);
 
-#ifdef LIGHTCONE_MULTIPLE_ORIGINS
-  int oindex = Cones[cone].OriginIndex;
-  pos[0] -= ConeOrigins[oindex].PosOrigin[0];
-  pos[1] -= ConeOrigins[oindex].PosOrigin[1];
-  pos[2] -= ConeOrigins[oindex].PosOrigin[2];
-#endif
-
   return lightcone_is_cone_member_basic(Lp->P[i].Ascale, pos, Lp->P[i].ID.is_previously_most_bound(), cone);
 }
 

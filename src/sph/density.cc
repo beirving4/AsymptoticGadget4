@@ -721,8 +721,8 @@ void sph::density(int *list, int ntarget)
       fprintf(Logs.FdDensity, "Nf=%9lld  highest active timebin=%d  total-Nf=%lld\n", Tp->TimeBinsHydro.GlobalNActiveParticles,
               All.HighestActiveTimeBin, All.TotNumDensity);
       fprintf(Logs.FdDensity, "   work-load balance: %g   part/sec: raw=%g, effective=%g\n",
-              timax.tree / ((tisum.tree + 1e-20) / D->NTask), Tp->TimeBinsGravity.GlobalNActiveParticles / (tisum.tree + 1.0e-20),
-              Tp->TimeBinsGravity.GlobalNActiveParticles / ((timax.tree + 1.0e-20) * D->NTask));
+              timax.tree / ((tisum.tree + 1e-20) / D->NTask), Tp->TimeBinsHydro.GlobalNActiveParticles / (tisum.tree + 1.0e-20),
+              Tp->TimeBinsHydro.GlobalNActiveParticles / ((timax.tree + 1.0e-20) * D->NTask));
       fprintf(Logs.FdDensity,
               "   maximum number of nodes: %g, filled: %g  NumForeignNodes: max=%g avg=%g fill=%g NumForeignPoints: max=%g avg=%g "
               "fill=%g  cycles=%d\n",
