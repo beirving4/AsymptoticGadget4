@@ -212,6 +212,11 @@ void sim::init(int RestartSnapNum)
             j++;
           }
 
+      long long countAll;
+      sumup_large_ints(1, &count, &countAll, Communicator);
+      Sp.TotNumGas += countAll;
+      Sp.TotNumPart += countAll;
+
       All.MassTable[0] = 0;
 
 #ifdef SPLIT_PARTICLE_TYPE
