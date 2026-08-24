@@ -18,15 +18,15 @@ generated products, data, images, and the vendored `half` and `vectorclass`
 implementations so project architecture is not dominated by third-party type
 nodes.
 
-The 2026-08-24 pass found 184 code files and produced 2,747 nodes and 7,058 raw
-edges. It skipped 41 documentation files by request and 48 unclassified files
+The 2026-08-24 pass found 184 code files and produced 2,748 nodes and 7,058 raw
+edges. It skipped 42 documentation files by request and 48 unclassified files
 such as licenses, Makefile fragments, and text configuration/data inputs.
 Fourteen macro-heavy C++ translation units produced parser warnings and may be
 only partially represented; these warnings are Graphify limitations, not
 compiler failures.
 
 The committed release-candidate graph was regenerated with the working tree at
-AsymptoticGadget4 commit `b3b4b4bc9906f72c10cfa9a904c1671ca0b9939c`, based
+AsymptoticGadget4 commit `8dc5af0d23271993fd6f14afb4aa0548773e3481`, based
 on official GADGET-4 commit `2046797b578a3be27433a23a9ba912715a829626`.
 Follow-up documentation-only commits change files skipped by the code-only
 extractor, so they do not alter the extracted code graph. Regenerate once more
