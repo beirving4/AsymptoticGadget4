@@ -74,7 +74,7 @@ item remains unchecked.
   under an approved legacy branch and annotated tag.
 - [ ] Review the candidate diff and CI evidence before changing the default
   branch; the historical and updated lines have unrelated Git ancestry.
-- [ ] Confirm there are no secrets, private paths, executables, object files,
+- [x] Confirm there are no secrets, private paths, executables, object files,
   generated graphs, or large simulation outputs in the tag.
 - [ ] Create an annotated release tag, generate release notes/source archive,
   and rehearse a clean download/build/validation before publication.

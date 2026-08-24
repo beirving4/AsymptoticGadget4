@@ -28,9 +28,10 @@ compiler failures.
 The committed release-candidate graph was regenerated with the working tree at
 AsymptoticGadget4 commit `b3b4b4bc9906f72c10cfa9a904c1671ca0b9939c`, based
 on official GADGET-4 commit `2046797b578a3be27433a23a9ba912715a829626`.
-The follow-up audit-record commit changes only this skipped Markdown file, so it
-does not alter the extracted code graph. Regenerate once more after the final
-release tag so the public audit can name the immutable tag and release DOI.
+Follow-up documentation-only commits change files skipped by the code-only
+extractor, so they do not alter the extracted code graph. Regenerate once more
+after the final release tag so the public audit can name the immutable tag and
+release DOI.
 
 The multigraph diagnostic found 1,287 dangling edge endpoints, three directed
 same-endpoint edge groups that lose one relation during the post-build
