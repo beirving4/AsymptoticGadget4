@@ -137,6 +137,13 @@ environment variable `SYSTYPE` in your login-script (.profile,
 you will normally not have to deal with the file `Makefile.systype` at
 all and can compile right away.
 
+AsymptoticGadget4 also accepts an unquoted command-line selection such as
+`make SYSTYPE=Darwin-Homebrew ...`. The fork adds `Darwin-Homebrew` for native
+Apple Silicon or Intel Homebrew installations and `Generic-system-gcc` for
+Unix systems whose dependency headers and libraries are already on the
+compiler's default search path. See `15_build_portability.md` for the exact
+dependencies, commands, and verification matrix.
+
 To summarize, if you want to set-up GADGET-4 for compilation on a new,
 not yet defined computer system, you have to go through the following
 steps:
@@ -488,4 +495,3 @@ RestartFlag  | Action
       9      | Carry out an I/O bandwidth test to determine best setting for the number of concurrent reads/writes
       10     | Rearrange particle-lightcone data in merger tree order
       11     | Rearrange most-bound snapshot data in merger tree order
-

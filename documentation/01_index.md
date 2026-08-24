@@ -76,6 +76,26 @@ sufficiently self-contained fashion to allow anyone interested to
 learn using the code for cosmological N-body/SPH simulations on
 parallel machines.
 
+
+AsymptoticGadget4 release documentation                 {#asymptotic_docs}
+=======================================
+
+The publication-focused fork is documented by the following repository
+chapters:
+
+- `12_asymptotic_extensions.md`: scientific definitions, output fields, and
+  compatibility;
+- `13_loss_data_release.md`: proposed LOSS archive contents and validation;
+- `14_graphify_audit.md`: deterministic code-graph procedure and limitations;
+- `15_build_portability.md`: dependencies, macOS and Unix build profiles,
+  platform verification, and reproducibility policy;
+- `16_release_checklist.md`: completed work and outstanding scientific, data,
+  metadata, Git, and DOI release gates.
+
+`MODIFICATIONS.md` at the repository root is the concise upstream-to-fork
+change map. `examples/LOSS/README.md` and `examples/LOSS-smoke/README.md`
+provide the production and reduced-test workflows, respectively.
+
 Most core algorithms in GADGET-4 have been written by Volker Springel
 and constitute evolved and improved versions of earlier
 implementations in GADGET-2 and GADGET-3. Substantial contributions to
@@ -116,4 +136,3 @@ sufficient accuracy for the system under study. We strongly recommend
 to make convergence and resolution studies to establish the range of
 validity and the uncertainty of any numerical result obtained with
 GADGET-4.
-

@@ -1,0 +1,37 @@
+cff-version: 1.2.0
+message: >-
+  Cite the archived AsymptoticGadget4 software release and the GADGET-4 code
+  paper when using this software. Add the release DOI from the GitHub/Zenodo
+  record to your citation.
+title: AsymptoticGadget4
+type: software
+abstract: >-
+  A research fork of GADGET-4 developed for thesis work with the LOSS
+  simulations. The fork adds turnaround spherical-overdensity catalogue
+  fields, carries group properties into merger-tree output, and provides
+  portable LOSS configurations and validation tooling.
+authors:
+  - family-names: Irving
+    given-names: Bryen
+repository-code: https://github.com/beirving4/AsymptoticGadget4
+license: GPL-3.0-only
+keywords:
+  - cosmological simulation
+  - GADGET-4
+  - halo catalogues
+  - merger trees
+  - large-scale structure
+references:
+  - type: article
+    title: Simulating cosmic structure formation with the GADGET-4 code
+    authors:
+      - family-names: Springel
+        given-names: Volker
+      - family-names: Pakmor
+        given-names: Ruediger
+      - family-names: Zier
+        given-names: Oliver
+      - family-names: Reinecke
+        given-names: Martin
+    doi: 10.1093/mnras/stab1855
+    year: 2021
