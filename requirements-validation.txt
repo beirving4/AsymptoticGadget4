@@ -1,0 +1,5 @@
+# Python dependencies used only by release validators and analysis helpers.
+# The simulation executable does not import these packages at runtime.
+cffconvert==2.0.0
+h5py==3.16.0
+numpy==2.5.2

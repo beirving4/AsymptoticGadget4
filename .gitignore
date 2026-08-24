@@ -19,6 +19,8 @@ Tenet
 Tenet.dSYM
 Gadget4
 Gadget4.dSYM
+/AsymptoticGadget4-*
+/build-*/
 .build*/
 *.o
 *.check
@@ -33,6 +35,13 @@ processes_*.txt
 *.e*
 *\#
 *.sh
+!examples/LOSS/Config.sh
+!examples/LOSS-smoke/Config.sh
+
+# Python helper/test caches
+__pycache__/
+*.py[cod]
+.venv/
 
 #potentially large files
 *.h5
@@ -90,3 +99,11 @@ tests/MilliMillHyper/output
 tests/MilliMillHyper/output_tree
 tests/EuclidTest/G4_TreePM/output
 site/
+
+# Reproducible but large local Graphify products. The extraction recipe and
+# audited summary are tracked; generated JSON/HTML are not release sources.
+/graphify-out/
+
+# Publication helper scripts are source, despite the upstream blanket *.sh
+# rule above.
+!tools/run_graphify.sh

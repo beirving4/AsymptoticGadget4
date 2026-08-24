@@ -1,0 +1,69 @@
+InitCondFile                        ./ics
+OutputDir                           ./output
+SnapshotFileBase                    snapshot
+OutputListFilename                  outputs.txt
+
+ICFormat                            3
+SnapFormat                          3
+
+TimeLimitCPU                        3600
+CpuTimeBetRestartFile               1800
+MaxMemSize                          512
+
+TimeBegin                           0.2
+TimeMax                             0.202
+ComovingIntegrationOn               1
+
+Omega0                              0.306
+OmegaLambda                         0.694
+OmegaBaryon                         0.0487
+HubbleParam                         0.680
+Hubble                              100.0
+BoxSize                             16.0
+
+OutputListOn                        1
+TimeBetSnapshot                     1.5
+TimeOfFirstSnapshot                 0.202
+TimeBetStatistics                   0.05
+NumFilesPerSnapshot                 1
+MaxFilesWithConcurrentIO            1
+
+ErrTolIntAccuracy                   0.025
+CourantFac                          0.3
+MaxSizeTimestep                     0.001
+MinSizeTimestep                     0.0
+TypeOfOpeningCriterion              1
+ErrTolTheta                         0.75
+ErrTolThetaMax                      1.0
+ErrTolForceAcc                      0.002
+TopNodeFactor                       3.0
+ActivePartFracForNewDomainDecomp    0.01
+DesNumNgb                           32
+MaxNumNgbDeviation                  1
+
+UnitLength_in_cm                    3.085678e24
+UnitMass_in_g                       1.989e43
+UnitVelocity_in_cm_per_s            1e5
+GravityConstantInternal             0
+
+SofteningComovingClass0             0.02
+SofteningMaxPhysClass0              0.02
+SofteningClassOfPartType0           0
+SofteningClassOfPartType1           0
+
+DesLinkNgb                          20
+ArtBulkViscConst                    1.0
+MinEgySpec                          0
+InitGasTemp                         0
+
+NSample                             32
+GridSize                            32
+Seed                                181170
+SphereMode                          1
+PowerSpectrumType                   2
+ReNormalizeInputSpectrum            1
+PrimordialIndex                     0.969
+ShapeGamma                          0.21
+Sigma8                              0.804
+PowerSpectrumFile                   ../LOSS/class_desy3_3x2pt_all_ext_spectrum_gadget_ic_z99.txt
+InputSpectrum_UnitLength_in_cm      3.085678e24

@@ -1,0 +1,3 @@
+# This runtime parameter file is a byte-for-byte historical input. Preserve its
+# original trailing spaces rather than treating them as source whitespace errors.
+examples/LOSS/loss_param_sandbox.txt -whitespace

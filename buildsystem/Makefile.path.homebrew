@@ -1,0 +1,12 @@
+HOMEBREW_PREFIX = $(shell brew --prefix)
+
+GSL_INCL   = -I$(HOMEBREW_PREFIX)/opt/gsl/include
+GSL_LIBS   = -L$(HOMEBREW_PREFIX)/opt/gsl/lib
+FFTW_INCL  = -I$(HOMEBREW_PREFIX)/opt/fftw/include
+FFTW_LIBS  = -L$(HOMEBREW_PREFIX)/opt/fftw/lib
+HDF5_INCL  = -I$(HOMEBREW_PREFIX)/opt/hdf5/include
+HDF5_LIBS  = -L$(HOMEBREW_PREFIX)/opt/hdf5/lib
+HWLOC_INCL = -I$(HOMEBREW_PREFIX)/opt/hwloc/include
+HWLOC_LIBS = -L$(HOMEBREW_PREFIX)/opt/hwloc/lib
+MAPS_INCL  =
+MAPS_LIBS  =

@@ -1,0 +1,16 @@
+MACOS_SDK = $(shell xcrun --show-sdk-path)
+APPLE_ARCH = $(shell uname -m)
+
+CPP      = mpicxx -std=c++11
+OPTIMIZE = -ggdb -O3 -Wall -Wno-format-security -nostdinc++ -isystem $(MACOS_SDK)/usr/include/c++/v1
+
+ifeq (EXPLICIT_VECTORIZATION,$(findstring EXPLICIT_VECTORIZATION,$(CONFIGVARS)))
+ifneq (,$(filter arm64 aarch64,$(APPLE_ARCH)))
+$(error EXPLICIT_VECTORIZATION requires x86 AVX and is not supported by the Apple Silicon build profile)
+endif
+CFLAGS_VECTOR += -mavx -fabi-version=0
+CPV      = $(CPP)
+else
+CFLAGS_VECTOR =
+CPV      = $(CPP)
+endif

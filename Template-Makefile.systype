@@ -5,13 +5,14 @@
 # a new system.
 
 #SYSTYPE="Generic-gcc"
+#SYSTYPE="Generic-system-gcc"
 #SYSTYPE="Generic-intel"
 #SYSTYPE="Generic-gcc-single"
 #SYSTYPE="Generic-intel-single"
 #SYSTYPE="Darwin"
+#SYSTYPE="Darwin-Homebrew"
 #SYSTYPE="Magny"
 #SYSTYPE="gcc-paranoia"	
 #SYSTYPE="libs"
 #SYSTYPE="hydra"
 #SYSTYPE="bwforcluster"
-

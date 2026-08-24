@@ -77,7 +77,10 @@ SRC_DIR = src
 ###################
 #determine SYSTYPE#
 ###################
-ifdef SYSTYPE
+ifeq ($(origin SYSTYPE),command line)
+override SYSTYPE := "$(subst ",,$(SYSTYPE))"
+-include Makefile.systype
+else ifdef SYSTYPE
 SYSTYPE := "$(SYSTYPE)"
 -include Makefile.systype
 else
@@ -107,6 +110,10 @@ RESULT     := $(shell SRC_DIR=$(SRC_DIR) BUILD_DIR=$(BUILD_DIR) ./buildsystem/gi
 ##########################
 ifeq ($(SYSTYPE),"Generic-gcc")
 include buildsystem/Makefile.gen.libs
+include buildsystem/Makefile.comp.gcc
+endif
+ifeq ($(SYSTYPE),"Generic-system-gcc")
+include buildsystem/Makefile.path.default
 include buildsystem/Makefile.comp.gcc
 endif
 ifeq ($(SYSTYPE),"Generic-intel")
@@ -142,6 +149,10 @@ endif
 ifeq ($(SYSTYPE),"Darwin")
 include buildsystem/Makefile.comp.gcc
 include buildsystem/Makefile.path.macports
+endif
+ifeq ($(SYSTYPE),"Darwin-Homebrew")
+include buildsystem/Makefile.comp.apple-clang
+include buildsystem/Makefile.path.homebrew
 endif
 
 ifeq ($(SYSTYPE),"Magny")
@@ -430,7 +441,7 @@ GSL_LIBS   += -lgsl -lgslcblas
 HDF5_LIBS  += -lhdf5 -lz
 MATH_LIBS  = -lm
 
-ifneq ($(SYSTYPE),"Darwin")
+ifeq (,$(filter "Darwin" "Darwin-Homebrew",$(SYSTYPE)))
 ifeq (ALLOCATE_SHARED_MEMORY_VIA_POSIX,$(findstring ALLOCATE_SHARED_MEMORY_VIA_POSIX,$(CONFIGVARS)))
 SHMEM_LIBS  = -lrt
 endif
