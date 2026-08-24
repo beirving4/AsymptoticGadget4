@@ -25,11 +25,12 @@ Fourteen macro-heavy C++ translation units produced parser warnings and may be
 only partially represented; these warnings are Graphify limitations, not
 compiler failures.
 
-The repository HEAD was official GADGET-4 commit
-`2046797b578a3be27433a23a9ba912715a829626`; the graph also includes the
-uncommitted AsymptoticGadget4 release changes in this working tree. Regenerate
-the graph after the release commit or tag so the final audit can name one
-immutable source revision.
+The committed release-candidate graph was regenerated with the working tree at
+AsymptoticGadget4 commit `2c025f1e190c708e7f9760484b5abd3816fdc386`, based
+on official GADGET-4 commit `2046797b578a3be27433a23a9ba912715a829626`.
+The follow-up audit-record commit changes only this skipped Markdown file, so it
+does not alter the extracted code graph. Regenerate once more after the final
+release tag so the public audit can name the immutable tag and release DOI.
 
 The multigraph diagnostic found 1,266 dangling edge endpoints, two directed
 same-endpoint edge groups that lose one relation during the post-build
