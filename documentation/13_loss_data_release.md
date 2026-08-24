@@ -70,6 +70,13 @@ That inventory is not evidence that the ICs are unavailable elsewhere; it
 means the archived-IC acceptance gate remains open until the deposited files
 and their matching parameter file are staged.
 
+The Linux/HPC execution and evidence-staging procedure is provided as a
+copy-paste handoff in `17_cluster_validation_handoff.md`. It pins an already
+CI-validated source commit, prohibits IC regeneration as substitute evidence,
+requires before/after IC checksums, and stops after a small validation
+checkpoint. This data-dependent workflow remains manual: the archived ICs and
+cluster credentials must never be placed in GitHub Actions.
+
 ## Preserved-catalogue tree regression
 
 Before depositing the reference trees, repeat tree assembly from the staged

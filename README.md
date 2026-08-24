@@ -85,6 +85,17 @@ large generated graph files are deliberately excluded from release archives.
 The remaining author approvals and data-dependent tests are tracked in the
 [`publication release checklist`](documentation/16_release_checklist.md).
 
+Cluster acceptance and Zenodo staging
+=====================================
+
+The exact archived-IC integration test is intentionally manual because the
+simulation inputs are external to GitHub Actions. A pinned, copy-paste handoff
+for a Linux/HPC job is in
+[`documentation/17_cluster_validation_handoff.md`](documentation/17_cluster_validation_handoff.md).
+It keeps the repository private during testing, treats the ICs as immutable,
+requires a short checkpoint and FOF/SUBFIND validation before any production
+run, and builds a verified Zenodo staging manifest without uploading it.
+
 Citation and license
 ====================
 

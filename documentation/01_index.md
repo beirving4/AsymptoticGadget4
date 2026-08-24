@@ -90,7 +90,9 @@ chapters:
 - `15_build_portability.md`: dependencies, macOS and Unix build profiles,
   platform verification, and reproducibility policy;
 - `16_release_checklist.md`: completed work and outstanding scientific, data,
-  metadata, Git, and DOI release gates.
+  metadata, Git, and DOI release gates;
+- `17_cluster_validation_handoff.md`: pinned Linux/HPC archived-IC acceptance
+  and Zenodo evidence-staging handoff.
 
 `MODIFICATIONS.md` at the repository root is the concise upstream-to-fork
 change map. `examples/LOSS/README.md` and `examples/LOSS-smoke/README.md`

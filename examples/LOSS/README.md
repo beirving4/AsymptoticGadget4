@@ -59,6 +59,12 @@ ordinary forward integration. They are included so users can analyze the
 thesis products directly and compare a rerun without downloading every full
 particle snapshot.
 
+For the Linux/HPC acceptance rehearsal, use the pinned
+[cluster validation handoff](../../documentation/17_cluster_validation_handoff.md).
+It records the IC inventory, platform, executable provenance, short checkpoint,
+catalogue schema, resource use, and Zenodo staging manifest while keeping the
+preserved inputs unchanged.
+
 ## Optional path: regenerate initial conditions
 
 The historical parameter file uses the built-in N-GenIC path and expects to be

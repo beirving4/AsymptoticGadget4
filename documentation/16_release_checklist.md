@@ -43,6 +43,10 @@ item remains unchecked.
 - [ ] From a clean download, initialize and advance the archived ICs to a
   readable validation checkpoint on Apple Silicon macOS.
 - [ ] Repeat the archived-IC acceptance run on Linux x86-64.
+- [x] Add a pinned Linux/HPC handoff that protects the original ICs, captures
+  platform/resource evidence, and stages a verified Zenodo manifest.
+- [ ] Execute that handoff on the cluster and verify the original IC checksums
+  before and after the acceptance run.
 - [ ] Validate the first snapshot and FOF/SUBFIND catalogue and record resource
   use, dependency versions, hashes, and numerical summaries.
 - [ ] Package and verify catalogues, trees, descendant/tree-link files,
@@ -76,6 +80,8 @@ item remains unchecked.
   branch; the historical and updated lines have unrelated Git ancestry.
 - [x] Confirm there are no secrets, private paths, executables, object files,
   generated graphs, or large simulation outputs in the tag.
+- [ ] Audit historical `main`, every other reachable branch/tag, and repository
+  history before changing the repository from private to public.
 - [ ] Create an annotated release tag, generate release notes/source archive,
   and rehearse a clean download/build/validation before publication.
 - [ ] Make the repository public, publish the GitHub release, archive it with

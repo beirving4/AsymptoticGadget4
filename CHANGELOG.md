@@ -22,6 +22,8 @@ software releases.
 - Reproducible Graphify extraction instructions and an audited graph summary.
 - Documentation for scientific definitions, output compatibility, build
   portability, archived-IC validation, and the planned LOSS data release.
+- A pinned Linux/HPC archived-IC handoff with data-safety, validation-evidence,
+  and Zenodo-staging gates.
 
 ### Changed
 

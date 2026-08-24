@@ -30,6 +30,7 @@ def markdown_files() -> list[Path]:
             "14_graphify_audit.md",
             "15_build_portability.md",
             "16_release_checklist.md",
+            "17_cluster_validation_handoff.md",
         )
     )
     roots.extend(sorted((ROOT / "examples").glob("LOSS*/README.md")))
