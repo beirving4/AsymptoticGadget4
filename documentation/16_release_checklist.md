@@ -65,7 +65,8 @@ item remains unchecked.
 
 ## GitHub and immutable release
 
-- [ ] Push the cleanup line as a release-candidate branch without force.
+- [x] Push the cleanup line as the
+  `codex/updated-asymptotic-gadget4` release-candidate branch without force.
 - [ ] Preserve historical `main` (`7165fdc0d6e34078bbb1836d6ee878c63600405d`)
   under an approved legacy branch and annotated tag.
 - [ ] Review the candidate diff and CI evidence before changing the default
