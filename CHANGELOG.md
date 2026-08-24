@@ -41,7 +41,8 @@ software releases.
 
 - Apple Silicon compilation and the generated-IC, two-rank MPI smoke workflow
   pass locally.
-- Linux x86-64 CI, archived LOSS IC startup, a real-satellite tree fixture, and
+- Linux x86-64 compilation and the generated-IC, two-rank MPI smoke workflow
+  pass in CI. Archived LOSS IC startup, a real-satellite tree fixture, and
   comparison with preserved historical outputs remain release gates. See
   `documentation/16_release_checklist.md`.
 

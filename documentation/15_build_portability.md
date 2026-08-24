@@ -124,7 +124,7 @@ Status as of 2026-08-24:
 | --- | --- | --- | --- | --- | --- | --- |
 | Apple Silicon macOS, Apple Clang 17, Open MPI 5.0.7 | pass | pass at 1 and 2 ranks | not yet run | pass | pass | interface verified; archived IC pending |
 | Intel macOS | not run | not run | not run | not run | not run | expected, unverified |
-| Linux x86-64 | not run on this branch | not run | not run | not run | not run | upstream-supported, fork unverified |
+| Linux x86-64, GCC/Open MPI (GitHub-hosted Ubuntu) | pass in CI | pass at 2 ranks | not yet run | pass | pass | interface verified; archived IC pending |
 | Linux ARM64 | not run | not run | not run | not run | not run | source-compatible, unverified |
 | Other Unix/HPC systems | site profile required | not run | not run | not run | not run | unverified |
 
@@ -143,6 +143,9 @@ compile, two-rank simulation, FOF/SUBFIND pass, merger-tree assembly, and HDF5
 schema validation on release-line pushes and pull requests. The macOS build job
 is manually dispatched so its runner architecture is recorded and private-repo
 runner costs remain an explicit release decision.
+
+The first pushed release-candidate validation completed successfully in
+[GitHub Actions run 32731170450](https://github.com/beirving4/AsymptoticGadget4/actions/runs/32731170450).
 
 The CI smoke run generates reduced ICs and therefore cannot replace the
 archived LOSS IC acceptance test. That data-dependent test is run during the

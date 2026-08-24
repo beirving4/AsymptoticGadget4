@@ -23,8 +23,8 @@ item remains unchecked.
 - [x] Validate the added HDF5 fields and absence of stored Lagrangian radii.
 - [x] Add CI for Python helpers, Linux compilation, MPI smoke execution,
   FOF/SUBFIND, tree assembly, and schema validation.
-- [ ] Observe the new CI workflow passing on the pushed release-candidate
-  branch.
+- [x] Observe the new CI workflow passing on the pushed release-candidate
+  branch ([run 32731170450](https://github.com/beirving4/AsymptoticGadget4/actions/runs/32731170450)).
 - [ ] Run a real multi-subhalo fixture and confirm every group-only tree field
   is zero on satellite rows.
 - [ ] Compare a small result with preserved historical catalogue/tree output,
