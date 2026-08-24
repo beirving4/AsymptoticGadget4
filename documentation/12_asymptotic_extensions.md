@@ -41,6 +41,24 @@ and compile-time settings in `/Config`.
 The `/TreeHalos` table carries `GroupMass` and the mass/radius pairs for
 Mean200, Crit200, Crit500, TopHat200, Turnaround, and TurnLambda. Values are
 meaningful only on the main subhalo of an FOF group; satellite values are zero.
+Merger-tree and `subhalo_treelink` files record `Git_commit` and `Git_date` in
+their `/Header` attributes so every assembled product identifies its source
+revision.
+
+For a real multi-subhalo fixture, validate satellite zero-initialization,
+provenance, FOF definition, and exact catalogue-to-tree transfer with:
+
+```sh
+python3 tools/validate_loss_tree_fields.py OUTPUT/treedata/trees.hdf5 \
+  --catalogue-dir OUTPUT \
+  --expected-commit "$(git rev-parse HEAD)" \
+  --expected-fof-link-length 0.28
+```
+
+The validator accepts single- or multi-file catalogue and tree layouts. It
+requires at least one satellite row, checks that no stored `R_Lag` dataset is
+present, and compares every source catalogue field that exists exactly (not
+with a floating-point tolerance).
 
 ## Derived Lagrangian radius
 

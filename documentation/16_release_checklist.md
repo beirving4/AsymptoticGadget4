@@ -25,10 +25,13 @@ item remains unchecked.
   FOF/SUBFIND, tree assembly, and schema validation.
 - [x] Observe the new CI workflow passing on the pushed release-candidate
   branch ([run 32731170450](https://github.com/beirving4/AsymptoticGadget4/actions/runs/32731170450)).
-- [ ] Run a real multi-subhalo fixture and confirm every group-only tree field
+- [x] Run a real multi-subhalo fixture and confirm every group-only tree field
   is zero on satellite rows.
-- [ ] Compare a small result with preserved historical catalogue/tree output,
-  defining exact and floating-point comparison levels in advance.
+- [x] Compare the nine legacy group/SO payload fields exactly between preserved
+  historical catalogues and newly assembled trees.
+- [ ] Compare tree topology with a preserved historical final tree output,
+  defining exact and floating-point comparison levels in advance. No preserved
+  final tree was found in the local inventory.
 
 ## Archived initial conditions and LOSS data
 

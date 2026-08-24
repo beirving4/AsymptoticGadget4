@@ -17,6 +17,8 @@ software releases.
   validator.
 - A reference LOSS configuration, a derived Lagrangian-radius helper, and
   deterministic release-manifest tooling.
+- Git commit/date provenance in merger-tree and tree-link HDF5 headers, plus a
+  real-satellite tree-field regression validator.
 - Reproducible Graphify extraction instructions and an audited graph summary.
 - Documentation for scientific definitions, output compatibility, build
   portability, archived-IC validation, and the planned LOSS data release.
@@ -42,9 +44,12 @@ software releases.
 - Apple Silicon compilation and the generated-IC, two-rank MPI smoke workflow
   pass locally.
 - Linux x86-64 compilation and the generated-IC, two-rank MPI smoke workflow
-  pass in CI. Archived LOSS IC startup, a real-satellite tree fixture, and
-  comparison with preserved historical outputs remain release gates. See
-  `documentation/16_release_checklist.md`.
+  pass in CI.
+- A two-rank assembly of 75 preserved LOSS catalogues passes the real-satellite
+  regression: all 13 group-only fields are zero on 258,947 satellite rows and
+  all nine legacy group/SO fields match exactly on 1,521,937 central rows.
+- Archived LOSS IC startup and comparison with a preserved historical final
+  tree remain release gates. See `documentation/16_release_checklist.md`.
 
 Full formulae, sentinels, search limits, data-flow details, and upstream
 provenance are maintained in `MODIFICATIONS.md` and

@@ -54,7 +54,9 @@ The main subhalo (`SubRankInGr == 0`) of every FOF group receives:
 
 Satellites are explicitly initialized to zero for every group-only field.
 Descendant matching, progenitor selection, tree topology, and main-branch
-selection remain upstream algorithms.
+selection remain upstream algorithms. Merger-tree and tree-link HDF5 files
+record `Git_commit` and `Git_date` in `/Header`, matching the provenance
+available in snapshots and group catalogues.
 
 ### Acceleration round-trip
 
@@ -81,7 +83,8 @@ copy checksums are recorded in `examples/LOSS/INPUTS.sha256`.
 - Existing HDF5 initial conditions remain accepted by current upstream I/O.
 - Historical group files containing `Group_R_Lag_*` remain usable by external
   analysis tools; the clean port simply does not produce those datasets.
-- Current output embeds `/Header`, `/Parameters`, and `/Config`, including the
+- Current snapshot, catalogue, merger-tree, and tree-link output embeds the
+  applicable `/Header`, `/Parameters`, and `/Config` metadata, including the
   source commit and run configuration needed to interpret the products.
 - Numerical equivalence with historical full-production runs must be
   established by the planned small end-to-end and preserved-output regression

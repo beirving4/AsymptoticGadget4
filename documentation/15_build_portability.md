@@ -90,8 +90,32 @@ It reports object counts but deliberately does not treat them as fixed golden
 values: this smoke case generates its ICs during the run and small numerical
 changes can move marginal eight-particle groups across its deliberately low
 threshold. The tiny catalogue contains no satellite tree rows, so
-zero-initialization of real satellites still requires a multi-snapshot
-regression catalogue.
+zero-initialization of real satellites is covered separately by the preserved-
+catalogue regression below.
+
+## Historical multi-subhalo tree regression
+
+On Apple Silicon macOS, the full LOSS configuration assembled trees at two MPI
+ranks from 75 preserved catalogue snapshots plus 74 descendant and 74
+progenitor link files. The catalogues identify historical source commit
+`1e171a4a679d30ac1e6accabe8a76a037ccbacac` and
+`FOF_LINKLENGTH=0.28`; the candidate executable was commit
+`3770568068bbec060ec012d5a465df6809c660e1`.
+
+`tools/validate_loss_tree_fields.py` checked 1,780,884 tree-halo rows in 37,219
+trees. All 13 group-only fields were zero on all 258,947 satellite rows. On
+1,521,937 central rows across 59 populated snapshots, `GroupMass` and the eight
+standard Mean200, Crit200, Crit500, and TopHat200 mass/radius fields matched the
+source catalogues exactly. The assembled tree SHA-256 was
+`95e7e4cb46fa74ce3c1a009e5ef3ef579afa8166ecab695648734cda872c59a6`.
+
+The preserved catalogues predate the four Turnaround/TurnLambda datasets, so
+those optional inputs were absent and the new tree fields correctly retained
+zero sentinels. This run proves legacy catalogue compatibility, exact standard-
+field transfer, satellite initialization, and provenance serialization. It
+does not validate the numerical Turnaround/TurnLambda values against the
+historical science run, nor tree-topology equivalence against a preserved
+historical final tree; no such final tree was found in the local inventory.
 
 ## Archived LOSS initial-condition validation
 

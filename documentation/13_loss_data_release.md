@@ -26,8 +26,9 @@ user to infer or regenerate missing values.
    epochs, power spectrum, and IC-generation seed/settings.
 3. Complete `groups_XXX/fof_subhalo_tab_XXX` hierarchy.
 4. Final `treedata/trees*` output.
-5. `subhalo_desc_*` and `subhalo_treelink_*` intermediates needed to audit or
-   repeat final tree assembly without the full particle snapshot series.
+5. `subhalo_desc_*` and `subhalo_prog_*` inputs needed to repeat final tree
+   assembly, plus the resulting `subhalo_treelink_*` audit products, without
+   the full particle snapshot series.
 6. `parameters-usedvalues`, build/compiler/library information, launch layout,
    and representative runtime logs.
 7. Machine-readable file inventory with byte sizes and SHA-256 checksums.
@@ -61,6 +62,31 @@ Before publishing the data record:
 Repeat this acceptance test on Apple Silicon macOS and at least one Linux
 x86-64 environment. Passing the generated-IC smoke test alone is insufficient
 for the publication claim.
+
+The local thesis-workspace inventory found parameter files configured to
+generate their initial conditions at startup (`ICFormat=1`,
+`InitCondFile=./dummy.dat`) but did not find the exact archived raw IC files.
+That inventory is not evidence that the ICs are unavailable elsewhere; it
+means the archived-IC acceptance gate remains open until the deposited files
+and their matching parameter file are staged.
+
+## Preserved-catalogue tree regression
+
+Before depositing the reference trees, repeat tree assembly from the staged
+`fof_subhalo_tab_*`, `subhalo_desc_*`, and `subhalo_prog_*` inputs. Then run:
+
+```sh
+python3 tools/validate_loss_tree_fields.py STAGED_OUTPUT/treedata/trees.hdf5 \
+  --catalogue-dir STAGED_OUTPUT \
+  --expected-commit "$(git rev-parse HEAD)" \
+  --expected-fof-link-length 0.28 \
+  --output STAGED_OUTPUT/tree-field-validation.json
+```
+
+Deposit the JSON summary with the input and output manifests. A passing result
+shows exact field transfer and satellite initialization in the newly assembled
+trees; it does not replace comparison with a preserved historical final tree,
+which is needed to make a separate topology-equivalence claim.
 
 ## Packaging
 
