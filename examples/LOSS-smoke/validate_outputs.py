@@ -66,6 +66,9 @@ def validate(output_dir: Path, snapshot_number: int) -> dict[str, int]:
             if top_level not in trees:
                 raise AssertionError(f"{trees_path} is missing /{top_level}")
         halos = trees["TreeHalos"]
+        for attribute in ("Git_commit", "Git_date"):
+            if attribute not in trees["Header"].attrs:
+                raise AssertionError(f"tree header is missing {attribute}")
         for field in TREE_GROUP_FIELDS:
             if field not in halos:
                 raise AssertionError(f"tree is missing /TreeHalos/{field}")
@@ -78,6 +81,12 @@ def validate(output_dir: Path, snapshot_number: int) -> dict[str, int]:
                 raise AssertionError(f"satellite rows contain nonzero {field}")
         tree_names = _dataset_names(trees)
         tree_halo_count = int(first_in_group.size)
+
+    treelink_path = output_dir / f"subhalo_treelink_{suffix}.hdf5"
+    with h5py.File(treelink_path, "r") as treelinks:
+        for attribute in ("Git_commit", "Git_date"):
+            if attribute not in treelinks["Header"].attrs:
+                raise AssertionError(f"tree-link header is missing {attribute}")
 
     all_names = catalogue_names + snapshot_names + tree_names
     forbidden = [name for name in all_names if "R_Lag" in name]

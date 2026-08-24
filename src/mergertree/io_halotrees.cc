@@ -28,6 +28,7 @@
 #include "../data/dtypes.h"
 #include "../data/mymalloc.h"
 #include "../fof/fof.h"
+#include "../gitversion/version.h"
 #include "../io/hdf5_util.h"
 #include "../io/io.h"
 #include "../logs/timer.h"
@@ -237,6 +238,9 @@ void halotrees_io::write_header_fields(hid_t handle)
   write_scalar_attribute(handle, "NumFiles", &header.num_files, H5T_NATIVE_INT);
 
   write_scalar_attribute(handle, "LastSnapShotNr", &header.lastsnapshotnr, H5T_NATIVE_INT);
+
+  write_string_attribute(handle, "Git_commit", GIT_COMMIT);
+  write_string_attribute(handle, "Git_date", GIT_DATE);
 }
 
 int halotrees_io::get_filenr_from_header(void) { return header.num_files; }
