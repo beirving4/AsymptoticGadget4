@@ -259,6 +259,25 @@ double fof<partset>::subfind_get_overdensity_value(int type, double ascale)
     {
       return 500.0 / omegaz;  // DeltaCrit500
     }
+  else if(type == 4)
+    {
+      /* Classical spherical-collapse turnaround. In an Einstein-de Sitter
+       * universe the cycloid solution at theta = pi gives
+       * Delta_ta = (3 pi / 4)^2 relative to the mean matter density. This
+       * implementation intentionally uses that constant approximation in
+       * LCDM as well. */
+      return pow(3.0 * M_PI / 4.0, 2);
+    }
+  else if(type == 5)
+    {
+      /* Cosmological-constant force-balance turnaround. For Lambda this is
+       * <rho_m> / rho_m,bg = 2 OmegaLambda a^3 / Omega0. This is not a
+       * general constant-w dark-energy implementation. */
+      if(!All.ComovingIntegrationOn || All.OmegaLambda <= 0.0 || All.Omega0 <= 0.0)
+        return 1.0;
+
+      return 2.0 * All.OmegaLambda * ascale * ascale * ascale / All.Omega0;
+    }
   else
     Terminate("can't be");
 
@@ -282,9 +301,10 @@ double fof<partset>::subfind_overdensity(void)
 
   sodata_comm<gravtree<partset>, domain<partset>, partset> commpattern{FoFDomain, &FoFGravTree, Tp, Group};
 
-  for(int rep = 0; rep < 4; rep++) /* repeat for all four overdensity values */
+  for(int rep = 0; rep < 6; rep++) /* standard SO definitions plus the two turnaround definitions */
     {
       int Nso = 0;
+      const double right_cap = 0.45 * All.BoxSize;
 
       for(int i = 0; i < Ngroups; i++)
         {
@@ -292,75 +312,120 @@ double fof<partset>::subfind_overdensity(void)
             {
               double rguess = pow(All.G * Group[i].Mass / (100 * All.Hubble * All.Hubble), 1.0 / 3);
 
+              /* Low-overdensity definitions require a substantially wider
+               * initial bracket than the standard virial definitions. Keep
+               * the trial radius below half the periodic box, beyond which a
+               * unique spherical enclosure is not defined. */
+              double delta       = subfind_get_overdensity_value(rep, Group[i].Ascale);
+              double right_scale = 3.0;
+              if(delta > 0.0 && delta < 100.0)
+                right_scale *= pow(100.0 / delta, 1.0 / 3.0);
+
               TargetList[Nso++] = i;
 
-              Right[i] = 3 * rguess;
+              Right[i] = right_scale * rguess;
+              if(Right[i] > right_cap)
+                Right[i] = right_cap;
               Left[i]  = 0;
 
               R200[i] = 0.5 * (Left[i] + Right[i]);
             }
         }
 
-      int iter = 0;
-      long long ntot;
+      /* If a converged trial radius is still above the requested density,
+       * widen the bracket and repeat. This is needed in clustered regions
+       * for low-density boundaries. Definitions with no crossing inside the
+       * box cap are marked invalid by the standard check below. */
+      const int MAX_EXPAND_ITERS = 6;
 
-      /* we will repeat the whole thing for those groups where we didn't converge to a SO radius yet */
-      do
+      for(int expand_iter = 0;; expand_iter++)
         {
-          double t0 = Logs.second();
+          int iter = 0;
+          long long ntot;
 
-          commpattern.execute(Nso, TargetList, MODE_DEFAULT);
-
-          /* do final operations on results */
-          int npleft = 0;
-          for(int n = 0; n < Nso; n++)
+          /* repeat the distributed mass query until every active bisection
+           * has converged within the current bracket */
+          do
             {
-              int i = TargetList[n];
+              double t0 = Logs.second();
 
-              double overdensity = M200[i] / (4.0 * M_PI / 3.0 * R200[i] * R200[i] * R200[i]) / rhoback;
+              commpattern.execute(Nso, TargetList, MODE_DEFAULT);
 
-              if((Right[i] - Left[i]) > 1.0e-4 * Left[i])
+              int npleft = 0;
+              for(int n = 0; n < Nso; n++)
                 {
-                  /* need to redo this group */
-                  TargetList[npleft++] = i;
+                  int i = TargetList[n];
 
-                  double delta = subfind_get_overdensity_value(rep, Group[i].Ascale);
-                  if(overdensity > delta)
-                    Left[i] = R200[i];
-                  else
-                    Right[i] = R200[i];
+                  double overdensity = M200[i] / (4.0 * M_PI / 3.0 * R200[i] * R200[i] * R200[i]) / rhoback;
 
-                  R200[i] = 0.5 * (Left[i] + Right[i]);
-
-                  if(iter >= MAXITER - 10)
+                  if((Right[i] - Left[i]) > 1.0e-4 * Left[i])
                     {
-                      printf("gr=%d task=%d  R200=%g Left=%g Right=%g Menclosed=%g Right-Left=%g\n   pos=(%g|%g|%g)\n", i, ThisTask,
-                             R200[i], Left[i], Right[i], M200[i], Right[i] - Left[i], Group[i].Pos[0], Group[i].Pos[1],
-                             Group[i].Pos[2]);
-                      myflush(stdout);
+                      TargetList[npleft++] = i;
+
+                      double delta = subfind_get_overdensity_value(rep, Group[i].Ascale);
+                      if(overdensity > delta)
+                        Left[i] = R200[i];
+                      else
+                        Right[i] = R200[i];
+
+                      R200[i] = 0.5 * (Left[i] + Right[i]);
+
+                      if(iter >= MAXITER - 10)
+                        {
+                          printf("gr=%d task=%d  R200=%g Left=%g Right=%g Menclosed=%g Right-Left=%g\n   pos=(%g|%g|%g)\n", i,
+                                 ThisTask, R200[i], Left[i], Right[i], M200[i], Right[i] - Left[i], Group[i].Pos[0],
+                                 Group[i].Pos[1], Group[i].Pos[2]);
+                          myflush(stdout);
+                        }
                     }
                 }
+
+              Nso = npleft;
+
+              sumup_large_ints(1, &npleft, &ntot, Communicator);
+
+              double t1 = Logs.second();
+
+              if(ntot > 0)
+                {
+                  iter++;
+
+                  mpi_printf("SUBFIND: SO iteration %2d: need to repeat for %12lld halo centers. (took %g sec)\n", iter, ntot,
+                             Logs.timediff(t0, t1));
+
+                  if(iter > MAXITER)
+                    Terminate("failed to converge in SO iteration");
+                }
             }
+          while(ntot > 0);
 
-          Nso = npleft;
+          if(expand_iter >= MAX_EXPAND_ITERS)
+            break;
 
-          sumup_large_ints(1, &npleft, &ntot, Communicator);
+          Nso = 0;
+          for(int i = 0; i < Ngroups; i++)
+            if(Group[i].Nsubs > 0)
+              {
+                double overdensity = M200[i] / (4.0 * M_PI / 3.0 * R200[i] * R200[i] * R200[i]) / rhoback;
+                double delta       = subfind_get_overdensity_value(rep, Group[i].Ascale);
 
-          double t1 = Logs.second();
+                if(overdensity > 1.1 * delta && Right[i] < right_cap)
+                  {
+                    Left[i]  = Right[i];
+                    Right[i] = (2.0 * Right[i] < right_cap) ? 2.0 * Right[i] : right_cap;
+                    R200[i]  = 0.5 * (Left[i] + Right[i]);
+                    TargetList[Nso++] = i;
+                  }
+              }
 
-          if(ntot > 0)
-            {
-              iter++;
+          long long need_expand;
+          sumup_large_ints(1, &Nso, &need_expand, Communicator);
+          if(need_expand == 0)
+            break;
 
-              if(iter > 0)
-                mpi_printf("SUBFIND: SO iteration %2d: need to repeat for %12lld halo centers. (took %g sec)\n", iter, ntot,
-                           Logs.timediff(t0, t1));
-
-              if(iter > MAXITER)
-                Terminate("failed to converge in SO iteration");
-            }
+          mpi_printf("SUBFIND: SO rep=%d bracket-expand pass %d: %lld halos still need a wider bracket\n", rep,
+                     expand_iter + 1, need_expand);
         }
-      while(ntot > 0);
 
       for(int i = 0; i < Ngroups; i++)
         {
@@ -399,6 +464,14 @@ double fof<partset>::subfind_overdensity(void)
               case 3:
                 Group[i].M_Crit500 = M200[i];
                 Group[i].R_Crit500 = R200[i];
+                break;
+              case 4:
+                Group[i].M_Turnaround = M200[i];
+                Group[i].R_Turnaround = R200[i];
+                break;
+              case 5:
+                Group[i].M_TurnLambda = M200[i];
+                Group[i].R_TurnLambda = R200[i];
                 break;
             }
         }

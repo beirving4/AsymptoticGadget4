@@ -355,9 +355,22 @@ class snap_io : public IO_Def
       }
     else  // reading
       {
+        /* Invert the writer transformation so a read/write RST_FOF
+         * postprocessing pass preserves the on-disk acceleration. GravPM is
+         * not restored separately; it remains zero in this postprocessing
+         * mode and is recomputed before force integration in normal runs. */
         MyFloat *in_buffer = (MyFloat *)buffer;
-        for(int k = 0; k < components; k++)
-          thisobj->Sp->P[particle].GravAccel[k] = All.accel_normalize_fac * in_buffer[k];
+        if(All.RestartFlag != RST_CONVERTSNAP)
+          {
+            double inv_cf_a2 = (All.cf_a2inv > 0.0) ? 1.0 / All.cf_a2inv : 1.0;
+            for(int k = 0; k < components; k++)
+              thisobj->Sp->P[particle].GravAccel[k] = inv_cf_a2 * All.accel_normalize_fac * in_buffer[k];
+          }
+        else
+          {
+            for(int k = 0; k < components; k++)
+              thisobj->Sp->P[particle].GravAccel[k] = All.accel_normalize_fac * in_buffer[k];
+          }
       }
   }
 

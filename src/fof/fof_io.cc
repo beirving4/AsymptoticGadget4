@@ -117,6 +117,16 @@ fof_io<partset>::fof_io(fof<partset> *FoF_ptr, MPI_Comm comm, int format) : IO_D
   init_field("FMR2", "Group_R_TopHat200", MEM_MY_FLOAT, FILE_MY_IO_FLOAT, READ_IF_PRESENT, 1, A_G, &FoF->Group[0].R_TopHat200, NULL,
              GROUPS, 0, 0, 0, 0, 0, 0, 0);
 
+  init_field("FMTU", "Group_M_Turnaround", MEM_MY_FLOAT, FILE_MY_IO_FLOAT, READ_IF_PRESENT, 1, A_G, &FoF->Group[0].M_Turnaround, NULL,
+             GROUPS, 0, 0, 0, 0, 0, 0, 0);
+  init_field("FRTU", "Group_R_Turnaround", MEM_MY_FLOAT, FILE_MY_IO_FLOAT, READ_IF_PRESENT, 1, A_G, &FoF->Group[0].R_Turnaround, NULL,
+             GROUPS, 0, 0, 0, 0, 0, 0, 0);
+
+  init_field("FMTL", "Group_M_TurnLambda", MEM_MY_FLOAT, FILE_MY_IO_FLOAT, READ_IF_PRESENT, 1, A_G, &FoF->Group[0].M_TurnLambda, NULL,
+             GROUPS, 0, 0, 0, 0, 0, 0, 0);
+  init_field("FRTL", "Group_R_TurnLambda", MEM_MY_FLOAT, FILE_MY_IO_FLOAT, READ_IF_PRESENT, 1, A_G, &FoF->Group[0].R_TurnLambda, NULL,
+             GROUPS, 0, 0, 0, 0, 0, 0, 0);
+
   init_field("FNSH", "GroupNsubs", MEM_INT, FILE_INT, READ_IF_PRESENT, 1, A_G, &FoF->Group[0].Nsubs, NULL, GROUPS, 0, 0, 0, 0, 0, 0, 0,
              true);
 

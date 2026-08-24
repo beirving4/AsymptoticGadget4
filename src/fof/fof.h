@@ -83,6 +83,8 @@ class fof : public setcomm
     MyFloat M_Crit200, R_Crit200;
     MyFloat M_Crit500, R_Crit500;
     MyFloat M_TopHat200, R_TopHat200;
+    MyFloat M_Turnaround, R_Turnaround; /* spherical-collapse turnaround, Delta = (3 pi / 4)^2 */
+    MyFloat M_TurnLambda, R_TurnLambda; /* cosmological-constant force-balance turnaround */
 #endif
 #ifdef MERGERTREE
     long long FileOffset;
@@ -128,7 +130,19 @@ class fof : public setcomm
     long long TreeID;
     int TreeTask;
     int TreeIndex;
+    MyFloat GroupMass; /* only populated for the main subhalo of each FOF group */
     MyFloat M_Crit200; /* will only be set for main subhalos in halos */
+    MyFloat R_Crit200;
+    MyFloat M_Mean200;
+    MyFloat R_Mean200;
+    MyFloat M_Crit500;
+    MyFloat R_Crit500;
+    MyFloat M_TopHat200;
+    MyFloat R_TopHat200;
+    MyFloat M_Turnaround;
+    MyFloat R_Turnaround;
+    MyFloat M_TurnLambda;
+    MyFloat R_TurnLambda;
 #endif
 #if defined(SUBFIND_ORPHAN_TREATMENT)
     int SubhaloLenPrevMostBnd;

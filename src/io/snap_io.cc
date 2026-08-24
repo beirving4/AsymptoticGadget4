@@ -100,12 +100,12 @@ void snap_io::init_basic(simparticles *Sp_ptr)
 #ifdef OUTPUT_ACCELERATIONS_IN_HALF_PRECISION
   All.accel_normalize_fac = 10.0 * All.Hubble * (100.0 * 1.0e5 / All.UnitVelocity_in_cm_per_s);
 
-  init_field("ACCE", "Acceleration", MEM_MY_FLOAT, FILE_HALF, SKIP_ON_READ, 3, A_NONE, 0, io_func_accel, ALL_TYPES, 1, -2.0, 1, -1, 0,
+  init_field("ACCE", "Acceleration", MEM_MY_FLOAT, FILE_HALF, READ_IF_PRESENT, 3, A_NONE, 0, io_func_accel, ALL_TYPES, 1, -2.0, 1, -1, 0,
              2, All.accel_normalize_fac * All.UnitVelocity_in_cm_per_s * All.UnitVelocity_in_cm_per_s / All.UnitLength_in_cm);
 #else
   All.accel_normalize_fac = 1.0;
 
-  init_field("ACCE", "Acceleration", MEM_MY_FLOAT, FILE_MY_IO_FLOAT, SKIP_ON_READ, 3, A_NONE, 0, io_func_accel, ALL_TYPES, 1, -2.0, 1,
+  init_field("ACCE", "Acceleration", MEM_MY_FLOAT, FILE_MY_IO_FLOAT, READ_IF_PRESENT, 3, A_NONE, 0, io_func_accel, ALL_TYPES, 1, -2.0, 1,
              -1, 0, 2, All.UnitVelocity_in_cm_per_s * All.UnitVelocity_in_cm_per_s / All.UnitLength_in_cm);
 #endif
 

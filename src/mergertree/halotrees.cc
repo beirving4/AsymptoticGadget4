@@ -284,7 +284,21 @@ void mergertree::halotrees_assign_global_subhalonr_and_groupnr(void)
       /* assign some special properties to the subhalos in the tree which come from the FOF group catalogue (like M200, etc.) */
 
       for(int i = 0; i < Cats[num].Nsubhalos; i++)
-        Cats[num].Subhalo[i].M_Crit200 = 0;
+        {
+          Cats[num].Subhalo[i].GroupMass    = 0;
+          Cats[num].Subhalo[i].M_Crit200    = 0;
+          Cats[num].Subhalo[i].R_Crit200    = 0;
+          Cats[num].Subhalo[i].M_Mean200    = 0;
+          Cats[num].Subhalo[i].R_Mean200    = 0;
+          Cats[num].Subhalo[i].M_Crit500    = 0;
+          Cats[num].Subhalo[i].R_Crit500    = 0;
+          Cats[num].Subhalo[i].M_TopHat200  = 0;
+          Cats[num].Subhalo[i].R_TopHat200  = 0;
+          Cats[num].Subhalo[i].M_Turnaround = 0;
+          Cats[num].Subhalo[i].R_Turnaround = 0;
+          Cats[num].Subhalo[i].M_TurnLambda = 0;
+          Cats[num].Subhalo[i].R_TurnLambda = 0;
+        }
 
       int *Send_count  = (int *)Mem.mymalloc("Send_count", sizeof(int) * NTask);
       int *Send_offset = (int *)Mem.mymalloc("Send_offset", sizeof(int) * NTask);
@@ -294,7 +308,19 @@ void mergertree::halotrees_assign_global_subhalonr_and_groupnr(void)
       struct exch_data
       {
         long long GroupNr;
+        MyFloat GroupMass;
         MyFloat M_Crit200;
+        MyFloat R_Crit200;
+        MyFloat M_Mean200;
+        MyFloat R_Mean200;
+        MyFloat M_Crit500;
+        MyFloat R_Crit500;
+        MyFloat M_TopHat200;
+        MyFloat R_TopHat200;
+        MyFloat M_Turnaround;
+        MyFloat R_Turnaround;
+        MyFloat M_TurnLambda;
+        MyFloat R_TurnLambda;
         int loc_index;
       };
 
@@ -380,7 +406,19 @@ void mergertree::halotrees_assign_global_subhalonr_and_groupnr(void)
                 "import_data[i].GroupNr=%lld\n",
                 num, i, Cats[num].Ngroups, nimport, index, Cats[num].Group[index].GroupNr, import_data[i].GroupNr);
 
-          import_data[i].M_Crit200 = Cats[num].Group[index].M_Crit200;
+          import_data[i].GroupMass    = Cats[num].Group[index].Mass;
+          import_data[i].M_Crit200    = Cats[num].Group[index].M_Crit200;
+          import_data[i].R_Crit200    = Cats[num].Group[index].R_Crit200;
+          import_data[i].M_Mean200    = Cats[num].Group[index].M_Mean200;
+          import_data[i].R_Mean200    = Cats[num].Group[index].R_Mean200;
+          import_data[i].M_Crit500    = Cats[num].Group[index].M_Crit500;
+          import_data[i].R_Crit500    = Cats[num].Group[index].R_Crit500;
+          import_data[i].M_TopHat200  = Cats[num].Group[index].M_TopHat200;
+          import_data[i].R_TopHat200  = Cats[num].Group[index].R_TopHat200;
+          import_data[i].M_Turnaround = Cats[num].Group[index].M_Turnaround;
+          import_data[i].R_Turnaround = Cats[num].Group[index].R_Turnaround;
+          import_data[i].M_TurnLambda = Cats[num].Group[index].M_TurnLambda;
+          import_data[i].R_TurnLambda = Cats[num].Group[index].R_TurnLambda;
         }
 
       /* send the results back */
@@ -396,7 +434,21 @@ void mergertree::halotrees_assign_global_subhalonr_and_groupnr(void)
 
       /* now read it out and assign the data */
       for(int i = 0; i < nexport; i++)
-        Cats[num].Subhalo[export_data[i].loc_index].M_Crit200 = export_data[i].M_Crit200;
+        {
+          Cats[num].Subhalo[export_data[i].loc_index].GroupMass    = export_data[i].GroupMass;
+          Cats[num].Subhalo[export_data[i].loc_index].M_Crit200    = export_data[i].M_Crit200;
+          Cats[num].Subhalo[export_data[i].loc_index].R_Crit200    = export_data[i].R_Crit200;
+          Cats[num].Subhalo[export_data[i].loc_index].M_Mean200    = export_data[i].M_Mean200;
+          Cats[num].Subhalo[export_data[i].loc_index].R_Mean200    = export_data[i].R_Mean200;
+          Cats[num].Subhalo[export_data[i].loc_index].M_Crit500    = export_data[i].M_Crit500;
+          Cats[num].Subhalo[export_data[i].loc_index].R_Crit500    = export_data[i].R_Crit500;
+          Cats[num].Subhalo[export_data[i].loc_index].M_TopHat200  = export_data[i].M_TopHat200;
+          Cats[num].Subhalo[export_data[i].loc_index].R_TopHat200  = export_data[i].R_TopHat200;
+          Cats[num].Subhalo[export_data[i].loc_index].M_Turnaround = export_data[i].M_Turnaround;
+          Cats[num].Subhalo[export_data[i].loc_index].R_Turnaround = export_data[i].R_Turnaround;
+          Cats[num].Subhalo[export_data[i].loc_index].M_TurnLambda = export_data[i].M_TurnLambda;
+          Cats[num].Subhalo[export_data[i].loc_index].R_TurnLambda = export_data[i].R_TurnLambda;
+        }
 
       Mem.myfree(import_data);
       Mem.myfree(export_data);

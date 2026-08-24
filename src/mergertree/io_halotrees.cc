@@ -86,8 +86,36 @@ halotrees_io::halotrees_io(mergertree *MergerTree_ptr, MPI_Comm comm, int format
              SUBGROUPS, 0, 0, 0, 0, 0, 0, 0, true);
   init_field("MASS", "SubhaloMass", MEM_MY_FLOAT, FILE_MY_IO_FLOAT, SKIP_ON_READ, 1, A_H, &MergerTree->Halos[0].SubProp.Mass, NULL,
              TREEHALOS, 0, 0, 0, 0, 0, 0, 0);
+
+  /* FOF properties are populated only on the main subhalo of each group.
+   * Satellite rows contain zero for these fields. */
+  init_field("FMAS", "GroupMass", MEM_MY_FLOAT, FILE_MY_IO_FLOAT, SKIP_ON_READ, 1, A_H, &MergerTree->Halos[0].SubProp.GroupMass, NULL,
+             TREEHALOS, 0, 0, 0, 0, 0, 0, 0);
   init_field("FMC2", "Group_M_Crit200", MEM_MY_FLOAT, FILE_MY_IO_FLOAT, SKIP_ON_READ, 1, A_H, &MergerTree->Halos[0].SubProp.M_Crit200,
              NULL, TREEHALOS, 0, 0, 0, 0, 0, 0, 0);
+  init_field("FRC2", "Group_R_Crit200", MEM_MY_FLOAT, FILE_MY_IO_FLOAT, SKIP_ON_READ, 1, A_H, &MergerTree->Halos[0].SubProp.R_Crit200,
+             NULL, TREEHALOS, 0, 0, 0, 0, 0, 0, 0);
+  init_field("FMM2", "Group_M_Mean200", MEM_MY_FLOAT, FILE_MY_IO_FLOAT, SKIP_ON_READ, 1, A_H, &MergerTree->Halos[0].SubProp.M_Mean200,
+             NULL, TREEHALOS, 0, 0, 0, 0, 0, 0, 0);
+  init_field("FRM2", "Group_R_Mean200", MEM_MY_FLOAT, FILE_MY_IO_FLOAT, SKIP_ON_READ, 1, A_H, &MergerTree->Halos[0].SubProp.R_Mean200,
+             NULL, TREEHALOS, 0, 0, 0, 0, 0, 0, 0);
+  init_field("FMC5", "Group_M_Crit500", MEM_MY_FLOAT, FILE_MY_IO_FLOAT, SKIP_ON_READ, 1, A_H, &MergerTree->Halos[0].SubProp.M_Crit500,
+             NULL, TREEHALOS, 0, 0, 0, 0, 0, 0, 0);
+  init_field("FRC5", "Group_R_Crit500", MEM_MY_FLOAT, FILE_MY_IO_FLOAT, SKIP_ON_READ, 1, A_H, &MergerTree->Halos[0].SubProp.R_Crit500,
+             NULL, TREEHALOS, 0, 0, 0, 0, 0, 0, 0);
+  init_field("FMT2", "Group_M_TopHat200", MEM_MY_FLOAT, FILE_MY_IO_FLOAT, SKIP_ON_READ, 1, A_H,
+             &MergerTree->Halos[0].SubProp.M_TopHat200, NULL, TREEHALOS, 0, 0, 0, 0, 0, 0, 0);
+  init_field("FMR2", "Group_R_TopHat200", MEM_MY_FLOAT, FILE_MY_IO_FLOAT, SKIP_ON_READ, 1, A_H,
+             &MergerTree->Halos[0].SubProp.R_TopHat200, NULL, TREEHALOS, 0, 0, 0, 0, 0, 0, 0);
+  init_field("FMTU", "Group_M_Turnaround", MEM_MY_FLOAT, FILE_MY_IO_FLOAT, SKIP_ON_READ, 1, A_H,
+             &MergerTree->Halos[0].SubProp.M_Turnaround, NULL, TREEHALOS, 0, 0, 0, 0, 0, 0, 0);
+  init_field("FRTU", "Group_R_Turnaround", MEM_MY_FLOAT, FILE_MY_IO_FLOAT, SKIP_ON_READ, 1, A_H,
+             &MergerTree->Halos[0].SubProp.R_Turnaround, NULL, TREEHALOS, 0, 0, 0, 0, 0, 0, 0);
+  init_field("FMTL", "Group_M_TurnLambda", MEM_MY_FLOAT, FILE_MY_IO_FLOAT, SKIP_ON_READ, 1, A_H,
+             &MergerTree->Halos[0].SubProp.M_TurnLambda, NULL, TREEHALOS, 0, 0, 0, 0, 0, 0, 0);
+  init_field("FRTL", "Group_R_TurnLambda", MEM_MY_FLOAT, FILE_MY_IO_FLOAT, SKIP_ON_READ, 1, A_H,
+             &MergerTree->Halos[0].SubProp.R_TurnLambda, NULL, TREEHALOS, 0, 0, 0, 0, 0, 0, 0);
+
   init_field("SPOS", "SubhaloPos", MEM_MY_FLOAT, FILE_MY_IO_FLOAT, SKIP_ON_READ, 3, A_H, &MergerTree->Halos[0].SubProp.Pos[0], NULL,
              TREEHALOS, 0, 0, 0, 0, 0, 0, 0);
   init_field("SVEL", "SubhaloVel", MEM_MY_FLOAT, FILE_MY_IO_FLOAT, SKIP_ON_READ, 3, A_H, &MergerTree->Halos[0].SubProp.Vel[0], NULL,
