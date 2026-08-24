@@ -18,7 +18,7 @@ generated products, data, images, and the vendored `half` and `vectorclass`
 implementations so project architecture is not dominated by third-party type
 nodes.
 
-The 2026-08-24 pass found 182 code files and produced 2,727 nodes and 7,007 raw
+The 2026-08-24 pass found 184 code files and produced 2,747 nodes and 7,058 raw
 edges. It skipped 41 documentation files by request and 48 unclassified files
 such as licenses, Makefile fragments, and text configuration/data inputs.
 Fourteen macro-heavy C++ translation units produced parser warnings and may be
@@ -26,20 +26,20 @@ only partially represented; these warnings are Graphify limitations, not
 compiler failures.
 
 The committed release-candidate graph was regenerated with the working tree at
-AsymptoticGadget4 commit `2c025f1e190c708e7f9760484b5abd3816fdc386`, based
+AsymptoticGadget4 commit `b3b4b4bc9906f72c10cfa9a904c1671ca0b9939c`, based
 on official GADGET-4 commit `2046797b578a3be27433a23a9ba912715a829626`.
 The follow-up audit-record commit changes only this skipped Markdown file, so it
 does not alter the extracted code graph. Regenerate once more after the final
 release tag so the public audit can name the immutable tag and release DOI.
 
-The multigraph diagnostic found 1,266 dangling edge endpoints, two directed
+The multigraph diagnostic found 1,287 dangling edge endpoints, three directed
 same-endpoint edge groups that lose one relation during the post-build
 `DiGraph` conversion, and no exact duplicate edges or missing endpoint IDs.
-The post-build graph contains 5,740 edges. Important conclusions must therefore
+The post-build graph contains 5,768 edges. Important conclusions must therefore
 be confirmed in source or by a runtime test.
 
-The generated `graphify-out` directory is about 8.0 MB, `graph.json` is about
-2.9 MB, and `GRAPH_TREE.html` is about 160 KB. These reproducible products are
+The generated `graphify-out` directory is about 7.5 MB, `graph.json` is about
+3.1 MB, and `GRAPH_TREE.html` is about 164 KB. These reproducible products are
 ignored by Git because they are tool-version-sensitive generated artifacts;
 the pinned recipe, filters, and this audited summary are the release sources.
 To publish generated graph files later, review their stability, usefulness,
@@ -68,7 +68,7 @@ supported by the local source, release documentation, and validation tests.
 ## Findings and verification
 
 - **High confidence:** `mergertree` remains the highest-degree project node
-  (degree 129), followed by the generic tree, I/O, domain, MPI communication,
+  (degree 127), followed by the generic tree, I/O, domain, MPI communication,
   FOF, and N-GenIC classes. Excluding vendored numerical types makes this hub
   list substantially more useful for change-risk review.
 - **High confidence:** Graphify locates
@@ -85,6 +85,11 @@ supported by the local source, release documentation, and validation tests.
   named `io_func_accel`, correctly marking an unqualified query ambiguous.
   The changed snapshot implementation was verified directly in
   `src/io/snap_io.h` and with an HDF5 FOF read/write round trip.
+- **High confidence:** the refreshed graph includes the standalone historical
+  tree validator and its HDF5 field/provenance checks. An unqualified
+  `validate` query is correctly marked ambiguous between that tool and the
+  smoke-output validator; the runtime regression, rather than graph presence,
+  establishes the validator's result.
 - **Limited confidence:** Graphify does not model individual C++ structure
   fields as first-class nodes and its broad natural-language query for group
   field transfer returns a noisy neighborhood. The field-by-field lineage in
