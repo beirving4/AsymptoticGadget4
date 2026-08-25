@@ -30,8 +30,7 @@ here. The project intends to use semantic version tags for public releases.
   including the common `0.2` choice, represent a different halo definition.
 - The repository landing page now describes AsymptoticGadget4 directly while
   retaining clear upstream attribution and licensing.
-- The reviewed publication lineage is the default `main` branch; the previous
-  source line remains available as `legacy/historical-main`.
+- The reviewed publication lineage is the default `main` branch.
 
 ### Removed
 

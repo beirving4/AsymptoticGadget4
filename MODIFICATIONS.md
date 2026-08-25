@@ -4,8 +4,7 @@
 
 AsymptoticGadget4 is an unofficial research fork of GADGET-4. The publication
 line ports the local scientific extensions onto a reviewed official GADGET-4
-source base. The earlier source line is preserved as
-`legacy/historical-main`; it was not merged into the publication history.
+source base.
 
 Git history, release tags, and retained source-file notices are the
 authoritative detailed provenance records.
