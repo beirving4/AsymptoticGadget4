@@ -2,20 +2,14 @@
 
 ## AsymptoticGadget4 fork
 
-Bryen Irving developed the LOSS-specific scientific extensions and maintains
-this publication-focused fork. The work was developed for thesis research with
-the LOSS simulations.
-
-The release metadata intentionally does not list an ORCID, institution, thesis
-title, software DOI, or data DOI until those details are confirmed by the
-author. They must be added to `CITATION.cff` and the release notes before the
-first public tag.
+Bryen Irving developed the scientific extensions and maintains this research
+fork.
 
 ## Upstream GADGET-4
 
 AsymptoticGadget4 is a modified version of GADGET-4, not an official GADGET-4
-release. The current port is based on official commit
-`2046797b578a3be27433a23a9ba912715a829626`.
+release. Upstream source history and retained file-level notices provide the
+detailed provenance.
 
 GADGET-4 was written principally by Volker Springel, with important
 contributions from Ruediger Pakmor, Oliver Zier, Martin Reinecke, and other

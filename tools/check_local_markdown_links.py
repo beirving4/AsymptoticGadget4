@@ -29,8 +29,6 @@ def markdown_files() -> list[Path]:
             "13_loss_data_release.md",
             "14_graphify_audit.md",
             "15_build_portability.md",
-            "16_release_checklist.md",
-            "17_cluster_validation_handoff.md",
             "18_loss_catalogue_data_dictionary.md",
         )
     )

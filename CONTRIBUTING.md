@@ -9,7 +9,7 @@ and new experiments.
 1. Base work on a topic branch and identify whether the change is inherited
    from upstream, a bug fix in this fork, or a new scientific feature.
 2. Do not commit initial conditions, simulation outputs, build products,
-   credentials, private paths, allocation names, or machine-local settings.
+   credentials, private paths, or machine-local settings.
 3. Preserve GADGET-4 copyright and license notices.
 4. Document any new compile-time option, runtime parameter, HDF5 field,
    sentinel, unit convention, or restart-compatibility effect.
@@ -47,5 +47,5 @@ Git history, compilation, and runtime tests remain the release evidence.
 
 Report ordinary bugs through the repository issue tracker. Potentially
 sensitive reports should use GitHub private vulnerability reporting if it is
-enabled rather than placing credentials, private data, or cluster details in a
-public issue.
+enabled rather than placing credentials, private data, or infrastructure
+details in a public issue.

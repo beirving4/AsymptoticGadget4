@@ -85,15 +85,11 @@ chapters:
 
 - `12_asymptotic_extensions.md`: scientific definitions, output fields, and
   compatibility;
-- `13_loss_data_release.md`: fixed LOSS archive scope, provenance, validation,
-  and coordinated data/software release plan;
+- `13_loss_data_release.md`: public catalogue scope, provenance boundary, and
+  software/data relationship;
 - `14_graphify_audit.md`: deterministic code-graph procedure and limitations;
 - `15_build_portability.md`: dependencies, macOS and Unix build profiles,
   platform verification, and reproducibility policy;
-- `16_release_checklist.md`: completed work and outstanding scientific, data,
-  metadata, Git, and DOI release gates;
-- `17_cluster_validation_handoff.md`: pinned Linux/HPC archived-IC acceptance
-  and Zenodo evidence-staging handoff;
 - `18_loss_catalogue_data_dictionary.md`: released HDF5 fields, units,
   sentinels, multifile indexing, link semantics, and tree-rebuild contract.
 

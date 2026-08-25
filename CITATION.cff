@@ -6,10 +6,9 @@ message: >-
 title: AsymptoticGadget4
 type: software
 abstract: >-
-  A research fork of GADGET-4 developed for thesis work with the LOSS
-  simulations. The fork adds turnaround spherical-overdensity catalogue
-  fields, carries group properties into merger-tree output, and provides
-  portable LOSS configurations and validation tooling.
+  A research fork of GADGET-4 that adds turnaround spherical-overdensity
+  catalogue fields, carries group properties into merger-tree output, and
+  provides portable configurations and validation tooling.
 authors:
   - family-names: Irving
     given-names: Bryen

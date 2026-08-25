@@ -19,19 +19,15 @@ implementations so project architecture is not dominated by third-party type
 nodes.
 
 The 2026-08-24 pass found 184 code files and produced 2,748 nodes and 7,058 raw
-edges. It skipped 43 documentation files by request and 48 unclassified files
+edges. It skipped 41 documentation files by request and 48 unclassified files
 such as licenses, Makefile fragments, and text configuration/data inputs.
 Fourteen macro-heavy C++ translation units produced parser warnings and may be
 only partially represented; these warnings are Graphify limitations, not
 compiler failures.
 
-The committed release-candidate graph was regenerated with the working tree at
-AsymptoticGadget4 commit `98f987b`, based
-on official GADGET-4 commit `2046797b578a3be27433a23a9ba912715a829626`.
-The refresh incrementally re-extracted the updated Markdown-link checker; the
-node and edge counts were unchanged. Documentation files are skipped by the
-code-only extractor. Regenerate once more after the final release tag so the
-public audit can name the immutable tag and release DOI.
+The graph is regenerated from the current working tree. Documentation files
+are skipped by the code-only extractor, so prose-only updates do not change
+the code graph. Release tags and Git history provide immutable source identity.
 
 The multigraph diagnostic found 1,287 dangling edge endpoints, three directed
 same-endpoint edge groups that lose one relation during the post-build
@@ -55,8 +51,7 @@ The deterministic graph contains source code only. The
 provide context for baseline algorithms, but are not silently merged into AST edges.
 The release audit keeps these evidence layers distinct:
 
-- `UPSTREAM_SOURCE_BASE`: official commit
-  `2046797b578a3be27433a23a9ba912715a829626`;
+- `UPSTREAM_SOURCE_BASE`: the reviewed official GADGET-4 source base;
 - `OFFICIAL_PAPER_AND_MANUAL`: baseline algorithm and usage descriptions;
 - `LOCAL_EXTENSION`: the reviewed working-tree changes listed in
   `MODIFICATIONS.md`;
@@ -94,8 +89,8 @@ supported by the local source, release documentation, and validation tests.
 - **Limited confidence:** Graphify does not model individual C++ structure
   fields as first-class nodes and its broad natural-language query for group
   field transfer returns a noisy neighborhood. The field-by-field lineage in
-  `MODIFICATIONS.md` and `documentation/12_asymptotic_extensions.md` comes
-  from source inspection and tests, not from an inferred graph edge.
+  `MODIFICATIONS.md` comes from source inspection and tests, not from an
+  inferred graph edge.
 - **Limited confidence:** fourteen partially parsed translation units and the
   dangling endpoints mean that graph reachability cannot establish that
   preprocessor-guarded or template-heavy code is dead.

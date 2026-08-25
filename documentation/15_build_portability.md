@@ -1,234 +1,99 @@
 # Build portability and validation
 
-## Scope
+AsymptoticGadget4 uses the GADGET-4 build system and adds portable profiles for
+common macOS and Unix installations. Build profiles select compilers and
+library paths; they do not change the scientific configuration.
 
-AsymptoticGadget4 is source-portable rather than binary-portable. Build a new
-executable for every operating system, CPU architecture, compiler, MPI
-implementation, and relevant library stack. Do not copy a Mach-O ARM binary
-to an Intel Mac or Linux system and expect it to run.
+## Dependencies
 
-The LOSS extensions use standard C++11, MPI, and the existing GADGET-4 HDF5
-I/O abstractions. They add no operating-system branches, CPU intrinsics, or
-architecture-specific data layouts. `EXPLICIT_VECTORIZATION` remains optional
-and is disabled in both LOSS configurations. That option selects x86 AVX and
-is rejected by the Apple Silicon build profile if enabled.
+Required components are:
 
-## Required software
-
-- a C++11 compiler and an MPI-3 implementation providing `mpicxx` and
-  `mpirun`;
-- HDF5, including C headers and libraries;
+- a C++11 compiler;
+- MPI-3;
+- HDF5;
 - GSL;
-- single-precision FFTW for the supplied LOSS configurations;
-- zlib, GNU Make, and Python;
-- Python with `h5py` only for the supplied HDF5 validators and analysis
-  helpers, not for simulation runtime.
+- FFTW;
+- zlib;
+- GNU Make;
+- Python for generated build configuration.
 
-MPI, HDF5, FFTW, and the compiler must target the same architecture. Mixing
-Intel and ARM Homebrew prefixes on macOS is unsupported.
+Optional features may require additional libraries documented in the upstream
+manual.
 
-## Supported build profiles
+## macOS with Homebrew
 
-### Apple Silicon or Intel macOS with Homebrew
-
-Install the dependencies and build the smoke configuration from the
-repository root:
+Install the common dependencies:
 
 ```sh
 brew install open-mpi hdf5 gsl fftw python
+```
+
+Build the reduced validation configuration:
+
+```sh
 make -j 4 SYSTYPE=Darwin-Homebrew DIR=examples/LOSS-smoke
 ```
 
-`Darwin-Homebrew` resolves the active Homebrew prefix at build time and asks
-`xcrun` for the active macOS SDK. The generated executable is native to the
-architecture of the selected compiler and libraries. The older upstream
-`Darwin` profile remains available for MacPorts installations under
-`/opt/local`.
+`Darwin-Homebrew` uses the Homebrew MPI compiler wrapper and discovers formula
+prefixes without embedding a user-specific installation path.
 
-Build the reference LOSS configuration with:
+## Linux and other Unix systems
 
-```sh
-make -j 8 SYSTYPE=Darwin-Homebrew CONFIG=examples/LOSS/Config.sh BUILD_DIR=build-loss EXEC=AsymptoticGadget4-LOSS
-```
-
-The full configuration's `NGENIC=1024` displacement mesh can require far more
-memory than the reduced smoke test. For cross-platform validation and release
-reproduction, prefer the archived initial-condition file instead of
-regenerating it on every platform.
-
-### Linux and other Unix systems with system libraries
-
-When `mpicxx` is available and HDF5, GSL, FFTW, and zlib are visible on the
-compiler's default search paths, use:
+When MPI, HDF5, GSL, and FFTW are visible on the compiler's normal search path,
+use:
 
 ```sh
 make -j 4 SYSTYPE=Generic-system-gcc DIR=examples/LOSS-smoke
 ```
 
-HPC systems using environment modules or nonstandard library prefixes should
-copy an existing `buildsystem/Makefile.path.*` file, define a site-specific
-`SYSTYPE` in the top-level Makefile, and record the loaded module versions.
-`Generic-gcc` is the upstream profile for libraries staged inside this source
-tree; it is distinct from `Generic-system-gcc`.
+Installations using environment modules or nonstandard prefixes can provide
+the standard Make variables or add a site-specific build profile. Keep those
+machine-local paths outside the repository.
 
-### Older glibc systems and RHEL/CentOS 7
-
-The default Linux shared-memory path uses `memfd_create`. Its glibc wrapper is
-available only in glibc 2.27 and newer; systems such as RHEL/CentOS 7 with glibc
-2.17 fail to compile that branch. Use GADGET-4's existing compile-time switch
-instead of patching `src/data/mymalloc.cc`:
+On older Unix systems where the default `memfd_create` shared-memory backend is
+unavailable, enable GADGET-4's existing compile-time option:
 
 ```text
 OLDSTYLE_SHARED_MEMORY_ALLOCATION
 ```
 
-Add the option to the run's `Config.sh` before building. It selects the
-portable `shm_open()` path and keeps the pinned source unchanged.
+This backend reserves shared memory according to `MaxMemSize` for each MPI
+task. Choose rank counts and memory settings appropriate to the target system.
 
-Under this old-style path, GADGET-4 reserves approximately `MaxMemSize` per MPI
-task up front in shared memory. `MaxMemSize` is a hard reservation, not a
-ceiling. Check the compute node's `/dev/shm` and RAM limits before submission,
-and leave substantial headroom when choosing ranks and `MaxMemSize`.
+## Reduced validation workflow
 
-Use the scheduler's supported MPI launcher for multinode work. On the tested
-RHEL-7-era cluster, `srun --mpi=pmi2` was required; bare `mpirun` could not
-launch across nodes. This launcher detail is site-specific and does not change
-the executable or scientific configuration.
-
-## Smoke validation
-
-From `examples/LOSS-smoke`, run:
+From `examples/LOSS-smoke`, run the generated test problem and tree assembly:
 
 ```sh
-python3 -m venv .venv
-. .venv/bin/activate
-python -m pip install --requirement ../../requirements-validation.txt
 mpirun -np 2 ./Gadget4 param.txt
 mpirun -np 2 ./Gadget4 param.txt 8 0
-python validate_outputs.py output
+python3 validate_outputs.py output
 ```
 
-The validator checks the HDF5 metadata groups, the four added turnaround
-datasets, the absence of stored Lagrangian-radius fields, and the tree payload.
-It reports object counts but deliberately does not treat them as fixed golden
-values: this smoke case generates its ICs during the run and small numerical
-changes can move marginal eight-particle groups across its deliberately low
-threshold. The tiny catalogue contains no satellite tree rows, so
-zero-initialization of real satellites is covered separately by the preserved-
-catalogue regression below.
-
-## Historical multi-subhalo tree regression
-
-On Apple Silicon macOS, the full LOSS configuration assembled trees at two MPI
-ranks from 75 preserved catalogue snapshots plus 74 descendant and 74
-progenitor link files. The catalogues identify historical source commit
-`1e171a4a679d30ac1e6accabe8a76a037ccbacac` and
-`FOF_LINKLENGTH=0.28`; the candidate executable was commit
-`3770568068bbec060ec012d5a465df6809c660e1`.
-
-`tools/validate_loss_tree_fields.py` checked 1,780,884 tree-halo rows in 37,219
-trees. All 13 group-only fields were zero on all 258,947 satellite rows. On
-1,521,937 central rows across 59 populated snapshots, `GroupMass` and the eight
-standard Mean200, Crit200, Crit500, and TopHat200 mass/radius fields matched the
-source catalogues exactly. The assembled tree SHA-256 was
-`95e7e4cb46fa74ce3c1a009e5ef3ef579afa8166ecab695648734cda872c59a6`.
-
-The preserved catalogues predate the four Turnaround/TurnLambda datasets, so
-those optional inputs were absent and the new tree fields correctly retained
-zero sentinels. This run proves legacy catalogue compatibility, exact standard-
-field transfer, satellite initialization, and provenance serialization. It
-does not validate the numerical Turnaround/TurnLambda values against the
-historical science run.
-
-A subsequent Linux/HPC regression tested the publication-scale layouts. Flag 8
-rebuilt L512's flat catalogues into 95,522,988 tree halos and L128's 16-piece
-catalogues into 68,612,094 tree halos, with `LastSnapShotNr=74`, exit status 0,
-and field-validator passes. In both cases `Nhalos_Total` equalled the sum of
-`Nsubhalos_Total` over the 75 catalogue snapshots. A preserved sandbox
-`trees.hdf5` was found, but it matches neither catalogue sequence now on disk;
-it is an orphan artifact and is not a topology oracle.
-
-## Archived LOSS initial-condition validation
-
-The generated-IC smoke test checks the executable and output interfaces. The
-data-dependent test uses the exact archived thesis ICs and demonstrates that
-the tagged code can initialize from them and evolve forward. The ICs are
-preserved validation inputs but are intentionally outside the current Zenodo
-halo-catalogue record.
-
-The Linux acceptance used a separate parameter-file variant that changed the
-output location/schedule and stopping point needed to write an affordable early
-checkpoint. It did not modify the preserved production input or regenerate ICs.
-
-The acceptance run passes only if the executable reads the complete IC set,
-logs the expected format, cosmology, units, starting time, particle counts and
-types, preserves the expected ID inventory, advances beyond initialization,
-and writes a readable snapshot. FOF/SUBFIND should then produce a readable
-catalogue with the documented custom schema. Record the source commit,
-parameter-file hash, IC manifest hash, platform and dependency versions, MPI
-layout, resource use, and numerical summaries.
-
-The Linux x86-64 gate passed for the exact 256-cubed IC: 16,777,216 type-1
-particles were read, advanced, written at `a=0.0105`, and reopened with finite
-fields, exact ID-set equality, and an unchanged source checksum. The macOS gate
-and one 1024-cubed primary-box acceptance remain open before public release.
-
-## Verification matrix
-
-Status as of 2026-08-24:
-
-| Platform | Build | Generated-IC smoke | Archived LOSS IC startup | FOF/SUBFIND | Trees and schema | Status |
-| --- | --- | --- | --- | --- | --- | --- |
-| Apple Silicon macOS, Apple Clang 17, Open MPI 5.0.7 | pass | pass at 1 and 2 ranks | not yet run | pass | pass | interface verified; archived IC pending |
-| Intel macOS | not run | not run | not run | not run | not run | expected, unverified |
-| Linux x86-64, GCC/Open MPI (GitHub-hosted Ubuntu) | pass in CI | pass at 2 ranks | not yet run | pass | pass | interface verified; archived IC pending |
-| Linux x86-64 HPC, glibc 2.17 | pass with `OLDSTYLE_SHARED_MEMORY_ALLOCATION` | not used | pass for exact 256-cubed IC | pass at validation checkpoint | production-scale flat and 16-piece rebuilds pass | exact-IC integration verified; 1024-cubed test pending |
-| Linux ARM64 | not run | not run | not run | not run | not run | source-compatible, unverified |
-| Other Unix/HPC systems | site profile required | not run | not run | not run | not run | unverified |
-
-The `Darwin-Homebrew` profile compiled both the reduced smoke configuration
-and the full reference LOSS configuration. Its documented two-rank smoke run
-produced 37 FOF groups and five one-halo trees, and the HDF5 schema validator
-passed. An earlier `-O2` build of the same interface test produced 26 groups
-and four tree halos. This difference is why generated-IC object counts are
-diagnostic rather than the scientific cross-platform oracle. Build success on
-one platform is not a claim of scientific equivalence across every platform.
+The validator checks HDF5 metadata, standard and added catalogue fields,
+merger-tree fields, satellite sentinels, and finite values. This reduced test
+is intended to exercise interfaces and data flow; it is not a substitute for
+scientific convergence testing of a production simulation.
 
 ## Automated validation
 
-`.github/workflows/ci.yml` runs the Python helper tests and a Linux x86-64
-compile, two-rank simulation, FOF/SUBFIND pass, merger-tree assembly, and HDF5
-schema validation on release-line pushes and pull requests. The macOS build job
-is manually dispatched so its runner architecture is recorded and private-repo
-runner costs remain an explicit release decision.
+The GitHub Actions workflow builds and runs the reduced test on Linux and
+checks the Python helpers, release tooling, checksums, local documentation
+links, and citation metadata. The current status is shown on the repository
+README badge.
 
-The first pushed release-candidate validation completed successfully in
-[GitHub Actions run 32731170450](https://github.com/beirving4/AsymptoticGadget4/actions/runs/32731170450).
-
-The CI smoke run generates reduced ICs and therefore cannot replace the
-archived LOSS IC acceptance test. The Linux data-dependent rehearsal has now
-passed for the 256-cubed IC; its sanitized evidence accompanies the release
-documentation, while the IC itself is outside the halo-catalogue data record.
+The macOS profile is also available as a manual workflow job. Other Unix and
+ARM systems should be treated as unverified until the same build and runtime
+checks are completed in those environments.
 
 ## Numerical comparison policy
 
-Cross-compiler and cross-MPI runs need not be byte-for-byte identical.
-Floating-point reduction order, compiler optimization, and MPI decomposition
-can produce small roundoff changes that later grow in nonlinear evolution.
-`PRESERVE_SHMEM_BINARY_INVARIANCE` stabilizes a specific shared-memory summation
-case but does not guarantee identical results across CPU architectures or
-toolchains.
+Cross-platform runs should use the same initial conditions, scientific
+configuration, runtime parameters, output epochs, MPI layout where practical,
+and dependency precision. Compare exact integer topology and identifiers
+separately from floating-point fields, using tolerances chosen before the
+comparison.
 
-For cosmological-background test suites:
-
-1. use the same archived initial conditions, compile-time configuration,
-   runtime parameters, output epochs, and FOF linking length;
-2. record OS/architecture, compiler flags, MPI rank and thread layout, and
-   HDF5/GSL/FFTW versions;
-3. compare particle and tree IDs exactly where applicable;
-4. compare floating fields with stated absolute and relative tolerances;
-5. compare halo counts, tree topology, and final science statistics separately;
-6. diagnose disagreements before changing a tolerance.
-
-The reduced smoke test establishes interface portability. It is not a
-convergence test and does not reproduce the full LOSS result.
+Successful compilation or a reduced smoke test does not establish bitwise
+equivalence across compilers, libraries, processor architectures, or a full
+production evolution.

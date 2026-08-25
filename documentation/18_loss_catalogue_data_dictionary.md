@@ -4,9 +4,8 @@
 
 The LOSS data record contains FOF/SUBFIND halo catalogues and the descendant
 and progenitor link files needed to rebuild merger trees. These files were
-produced by upstream GADGET-4 commit
-`1e171a4a679d30ac1e6accabe8a76a037ccbacac` with the LOSS configuration
-embedded in each HDF5 file. They were **not** produced by AsymptoticGadget4.
+produced by upstream GADGET-4 with the LOSS configuration embedded in each
+HDF5 file. They were **not** produced by AsymptoticGadget4.
 
 The released catalogues contain only the four standard spherical-overdensity
 definitions: Mean200, Crit200, Crit500, and TopHat200. They contain no
@@ -17,25 +16,12 @@ used to infer those values.
 
 Every catalogue carries `/Header`, `/Parameters`, and `/Config` metadata.
 Catalogue `/Header/Git_commit` identifies the producing source revision, while
-`/Config/FOF_LINKLENGTH` records the value `0.28`. The 25 embedded configuration
-defines are the same across the five simulations except for `PMGRID`, which is
-256 for the sandbox and 1024 for the four primary simulations.
+`/Config/FOF_LINKLENGTH` records the value `0.28`. The embedded metadata is the
+authoritative source for per-catalogue configuration differences.
 
 ## Fixed archive scope
 
-All simulations end uniformly at snapshot 074, where `/Header/Time = 100.0`
-and `/Header/Redshift = -0.99`. The common output-time list assigns the same
-scale factor to every snapshot index in every simulation.
-
-| Simulation | Layout | Files | Raw GB | gzip GB | Sum of `Nsubhalos_Total`, snapshots 000–074 | Groups at 074 |
-| --- | --- | ---: | ---: | ---: | ---: | ---: |
-| sandbox L256 N256 | one file per product/snapshot | 223 | 0.53 | 0.22 | 1,780,884 | 32,275 |
-| L32 N1024 | 16 pieces per product/snapshot | 3,568 | 14.86 | 6.01 | 52,977,915 | 505,089 |
-| L128 N1024 | 16 pieces per product/snapshot | 3,568 | 19.46 | 7.88 | 68,612,094 | 813,540 |
-| L512 N1024 | one file per product/snapshot | 223 | 27.73 | 11.17 | 95,522,988 | 1,487,085 |
-| L2048 N1024 | one file per product/snapshot | 223 | 37.60 | 14.80 | 124,956,594 | 2,651,012 |
-
-Each simulation archive contains exactly:
+Each catalogue archive contains:
 
 - `fof_subhalo_tab_000` through `fof_subhalo_tab_074`;
 - `subhalo_desc_000` through `subhalo_desc_073`;
@@ -47,7 +33,7 @@ snapshots, or `bak-*` files. The `bak-*` link files are intentionally excluded
 because they are incompatible with the live catalogue sequence, not merely to
 save space.
 
-Flat products are named, for example,
+Products may use a flat one-file layout, for example,
 `fof_subhalo_tab_074.hdf5`. Sixteen-piece products are stored as
 `groups_074/fof_subhalo_tab_074.P.hdf5`, where `P` runs numerically from 0
 through 15. Descendant and progenitor files follow the same layout.
@@ -233,24 +219,16 @@ The release invariant is:
 
 `trees/Header/Nhalos_Total == sum over snapshots 000–074 of catalogue Header/Nsubhalos_Total`.
 
-For a multifile snapshot, read `Nsubhalos_Total` once, not once per piece. This
-invariant passed for the 95,522,988-halo L512 flat layout and the 68,612,094-
-halo L128 sixteen-piece layout, with `LastSnapShotNr=74` in both rebuilt trees.
+For a multifile snapshot, read `Nsubhalos_Total` once, not once per piece.
 
 When AsymptoticGadget4 reads these legacy catalogues, the nine available
 standard group/SO payload fields transfer exactly. Its four optional
 Turnaround/TurnLambda tree fields remain zero because the source catalogue
 datasets do not exist; zero is not a reconstructed scientific measurement.
 
-## Manifest and integrity evidence
+## Manifest and integrity
 
-The five archives contain 7,805 HDF5 files totaling 100.18 GB before and 40.08
-GB after gzip compression. Each archive expands into exactly one simulation
-directory. A clean extraction of every archive was hashed file-by-file against
-the pre-compression inventory: all 7,805 files matched and no excluded file was
-present.
-
-`LOSS_RELEASE_MANIFEST.json` records the scope statement, upstream provenance,
-tree-rebuild invariant, archive byte sizes and SHA-256 values, and SHA-256 for
-every released file. Its SHA-256 is
-`b4d02e6c92e37c95e3a6a587ff6c82c579454f56552c3272bb81446636b7249b`.
+The data deposit supplies a machine-readable manifest containing its scope,
+upstream provenance, archive inventory, byte sizes, and per-file checksums.
+Use the manifest distributed with the data record to verify a download before
+analysis or tree reconstruction.
