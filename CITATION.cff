@@ -5,13 +5,17 @@ message: >-
   record to your citation.
 title: AsymptoticGadget4
 type: software
+version: 1.0.0
+date-released: '2026-08-25'
+doi: 10.5281/zenodo.22099530
 abstract: >-
   A research fork of GADGET-4 that adds turnaround spherical-overdensity
   catalogue fields, carries group properties into merger-tree output, and
   provides portable configurations and validation tooling.
 authors:
   - family-names: Irving
-    given-names: Bryen
+    given-names: Bryen E.
+    orcid: https://orcid.org/0000-0002-4028-3602
 repository-code: https://github.com/beirving4/AsymptoticGadget4
 license: GPL-3.0-only
 keywords:
