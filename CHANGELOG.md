@@ -45,6 +45,10 @@ software releases.
   the LOSS/thesis research fork, its current extensions, validation, and
   release boundary. Inherited upstream branding and manual-style copy were
   removed while preserving explicit GADGET-4 attribution and citations.
+- The reviewed publication lineage is now the default `main` branch. The
+  disjoint historical LOSS source line is preserved without modification as
+  `legacy/historical-main` at commit
+  `7165fdc0d6e34078bbb1836d6ee878c63600405d`.
 
 ### Removed
 

@@ -90,10 +90,14 @@ item remains unchecked.
 
 - [x] Push the cleanup line as the
   `codex/updated-asymptotic-gadget4` release-candidate branch without force.
-- [ ] Preserve historical `main` (`7165fdc0d6e34078bbb1836d6ee878c63600405d`)
-  under an approved legacy branch and annotated tag.
-- [ ] Review the candidate diff and CI evidence before changing the default
-  branch; the historical and updated lines have unrelated Git ancestry.
+- [x] Preserve historical `main` (`7165fdc0d6e34078bbb1836d6ee878c63600405d`)
+  exactly as `legacy/historical-main` before replacing the default branch.
+- [ ] Add an annotated archival tag for the historical line before making the
+  repository public.
+- [x] Review the candidate diff and CI evidence, then promote the validated
+  publication lineage to default `main` with an exact force-with-lease guard.
+  The historical and updated lines have unrelated Git ancestry and were not
+  merged.
 - [x] Confirm there are no secrets, private paths, executables, object files,
   generated graphs, or large simulation outputs in the tag.
 - [ ] Audit historical `main`, every other reachable branch/tag, and repository

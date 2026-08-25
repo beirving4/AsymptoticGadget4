@@ -4,8 +4,10 @@
 
 This branch starts from official GADGET-4 commit
 `2046797b578a3be27433a23a9ba912715a829626` (2026-08-05). The historical LOSS
-source remains on the repository's `main` branch at
-`7165fdc0d6e34078bbb1836d6ee878c63600405d`.
+source is preserved on the repository's `legacy/historical-main` branch at
+`7165fdc0d6e34078bbb1836d6ee878c63600405d`. The reviewed publication lineage
+is now the repository's default `main` branch; the two histories were not
+merged.
 
 The historical source was copied from GADGET-4 in summer 2023. Its closest
 identified upstream source state is
