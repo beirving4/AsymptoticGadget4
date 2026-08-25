@@ -19,19 +19,19 @@ implementations so project architecture is not dominated by third-party type
 nodes.
 
 The 2026-08-24 pass found 184 code files and produced 2,748 nodes and 7,058 raw
-edges. It skipped 42 documentation files by request and 48 unclassified files
+edges. It skipped 43 documentation files by request and 48 unclassified files
 such as licenses, Makefile fragments, and text configuration/data inputs.
 Fourteen macro-heavy C++ translation units produced parser warnings and may be
 only partially represented; these warnings are Graphify limitations, not
 compiler failures.
 
 The committed release-candidate graph was regenerated with the working tree at
-AsymptoticGadget4 commit `8dc5af0d23271993fd6f14afb4aa0548773e3481`, based
+AsymptoticGadget4 commit `98f987b`, based
 on official GADGET-4 commit `2046797b578a3be27433a23a9ba912715a829626`.
-Follow-up documentation-only commits change files skipped by the code-only
-extractor, so they do not alter the extracted code graph. Regenerate once more
-after the final release tag so the public audit can name the immutable tag and
-release DOI.
+The refresh incrementally re-extracted the updated Markdown-link checker; the
+node and edge counts were unchanged. Documentation files are skipped by the
+code-only extractor. Regenerate once more after the final release tag so the
+public audit can name the immutable tag and release DOI.
 
 The multigraph diagnostic found 1,287 dangling edge endpoints, three directed
 same-endpoint edge groups that lose one relation during the post-build
