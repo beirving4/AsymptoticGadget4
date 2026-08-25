@@ -32,13 +32,13 @@ The reference configuration uses `FOF_LINKLENGTH=0.28`. A user may edit this
 to 0.2, but the resulting group membership, SO centres, and merger histories
 will not reproduce the LOSS catalogue.
 
-## Primary path: archived initial conditions
+## Archived initial-condition validation path
 
-The publication data release will contain the exact LOSS initial-condition
-files used for the thesis simulations. The release must also provide their
-SHA-256 checksums and a parameter-file variant whose `InitCondFile` and
-`ICFormat` point to those files. Starting from that archived state, rather than
-regenerating it, is the authoritative reproduction path:
+The exact LOSS initial-condition files used for the thesis simulations are
+preserved validation inputs, but they are outside the scope of the current
+Zenodo halo-catalogue record. When authorized access to those ICs is available,
+verify their SHA-256 checksums and use a parameter-file variant whose
+`InitCondFile` and `ICFormat` point to them:
 
 ```sh
 sha256sum -c loss-initial-conditions.sha256
@@ -46,18 +46,16 @@ mpirun -np NUMBER_OF_RANKS ../../AsymptoticGadget4-LOSS loss_param_archived_ic.t
 ```
 
 On macOS, use `shasum -a 256 -c loss-initial-conditions.sha256` for the first
-command. The exact filenames will be supplied by the data release. A release
-rehearsal must show that the tagged code reads the complete IC set, reports the
-expected cosmology, units, starting time, particle counts, and particle types,
-and then advances to a readable short validation checkpoint. The validation
-parameter file may stop early to make this acceptance test affordable; the
-preserved production parameter file remains authoritative for a full forward
-evolution.
+command. The Linux x86-64 rehearsal passed on the exact 256-cubed IC: the
+pinned candidate read 16,777,216 type-1 particles, advanced, wrote and reopened
+a finite checkpoint with exact ID-set equality, and did not change the source
+checksum. A macOS run and a 1024-cubed primary-box acceptance remain open.
 
-Group catalogues and merger-tree products are reference outputs, not inputs to
-ordinary forward integration. They are included so users can analyze the
-thesis products directly and compare a rerun without downloading every full
-particle snapshot.
+The Zenodo record includes the standard-SO group catalogues plus descendant and
+progenitor links produced by upstream GADGET-4. It excludes ICs, particle
+snapshots, assembled trees, and tree-link outputs. Users can analyze the halo
+products directly and rebuild trees, but cannot rerun the exact simulations
+from the catalogue record alone.
 
 For the Linux/HPC acceptance rehearsal, use the pinned
 [cluster validation handoff](../../documentation/17_cluster_validation_handoff.md).
@@ -90,9 +88,12 @@ written. Final tree assembly through the last catalogue uses restartflag 8:
 mpirun -np NUMBER_OF_RANKS ../../AsymptoticGadget4-LOSS loss_param_sandbox.txt 8 LAST_SNAPSHOT_NUMBER
 ```
 
-The Zenodo data release should include group catalogues, final trees, and
-descendant/tree-link files so tree analysis and final assembly do not require
-the full particle snapshot series.
+The Zenodo record ships `fof_subhalo_tab_000..074`,
+`subhalo_desc_000..073`, and `subhalo_prog_001..074`. Final `trees` and
+`subhalo_treelink` files are restart-flag-8 outputs and are intentionally
+omitted. See the
+[catalogue data dictionary](../../documentation/18_loss_catalogue_data_dictionary.md)
+for the exact schema, layouts, indexing, and rebuild invariant.
 
 ## Lagrangian radii
 

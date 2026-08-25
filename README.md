@@ -28,29 +28,31 @@ The LOSS reference configuration and exact historical inputs are in
 setting to the upstream default of 0.2 is supported, but does not reproduce
 the published LOSS halo population.
 
-Primary LOSS reproduction path
-==============================
+LOSS software validation and catalogue record
+=============================================
 
-The primary reproduction claim is that a user can download the exact archived
-LOSS initial conditions from the associated data release, build this tagged
-source, initialize the simulation from those files, and evolve it forward.
-Regenerating the initial conditions is optional and is not required for this
-path. The release data must therefore include the IC checksum and a
-ready-to-run parameter file with `InitCondFile`, `ICFormat`, cosmology, units,
-starting time, and output schedule set for the archived files.
+The software and data releases have distinct provenance. The LOSS Zenodo data
+record contains standard-SO halo catalogues produced by upstream GADGET-4
+commit `1e171a4a679d30ac1e6accabe8a76a037ccbacac`, not by this fork. It ships
+`fof_subhalo_tab`, `subhalo_desc`, and `subhalo_prog` through snapshot 074 so
+users can analyze the catalogues directly and rebuild native merger trees. It
+does not ship initial conditions, particle snapshots, assembled trees, or
+tree-link outputs.
 
-Before release, this path will be validated by reading the complete archived
-IC set, checking its header and particle inventory, advancing beyond
-initialization to a short checkpoint, and confirming that the resulting
-snapshot and catalogue can be read. The deposited group catalogues, merger
-trees, and tree-link files serve both as reference products and as a way to use
-the thesis data without rerunning the full simulation; they are not inputs
-required merely to start evolving the ICs.
+AsymptoticGadget4's compatibility with the exact archived LOSS initial
+conditions was tested separately on Linux x86-64. The pinned candidate read all
+16,777,216 particles in the 256-cubed IC, advanced beyond initialization,
+wrote and reopened a finite checkpoint with exact ID-set equality, and left the
+source IC checksum unchanged. The archived ICs remain preserved validation
+inputs outside the current catalogue record; the record is therefore not a
+complete from-IC reproduction package.
 
-Users may also supply their own GADGET-compatible initial conditions and
-configurations. Such runs use this fork's added catalogue and merger-tree
-fields but are not LOSS reproductions unless they use the released LOSS inputs
-and settings.
+Users may supply their own GADGET-compatible initial conditions and
+configurations to produce this fork's added catalogue and merger-tree fields.
+The released standard catalogues do not contain Turnaround or TurnLambda and
+cannot be used to derive those values without a new FOF/SUBFIND run from
+particle data. The released HDF5 schema and link semantics are documented in
+[`documentation/18_loss_catalogue_data_dictionary.md`](documentation/18_loss_catalogue_data_dictionary.md).
 
 Build and validation
 ====================
@@ -72,7 +74,8 @@ The complete platform matrix, run commands, reproducibility expectations, and
 current verification status are in
 [`documentation/15_build_portability.md`](documentation/15_build_portability.md).
 The generated-IC smoke test is an interface test, not a scientific LOSS
-reproduction or a substitute for the archived-IC startup validation.
+reproduction. The Linux exact-IC result and remaining macOS/large-box gates are
+recorded separately in the portability guide.
 
 See [`MODIFICATIONS.md`](MODIFICATIONS.md) for the code-level change map and
 [`documentation/12_asymptotic_extensions.md`](documentation/12_asymptotic_extensions.md)
@@ -89,12 +92,13 @@ Cluster acceptance and Zenodo staging
 =====================================
 
 The exact archived-IC integration test is intentionally manual because the
-simulation inputs are external to GitHub Actions. A pinned, copy-paste handoff
-for a Linux/HPC job is in
+simulation inputs are external to GitHub Actions. The Linux/HPC acceptance run
+has passed, and its pinned, copy-paste procedure is retained in
 [`documentation/17_cluster_validation_handoff.md`](documentation/17_cluster_validation_handoff.md).
-It keeps the repository private during testing, treats the ICs as immutable,
-requires a short checkpoint and FOF/SUBFIND validation before any production
-run, and builds a verified Zenodo staging manifest without uploading it.
+It treats the ICs as immutable and requires a short checkpoint plus
+FOF/SUBFIND validation. The separately scoped catalogue archives and release
+manifest have also passed clean-extraction hash verification; transfer to an
+unpublished Zenodo draft remains a cluster-side release step.
 
 Citation and license
 ====================

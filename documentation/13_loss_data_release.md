@@ -1,133 +1,150 @@
-# LOSS reproducibility data release
+# LOSS halo-catalogue and software release
 
-The software release and simulation data should be separate, cross-linked
-Zenodo records. The software DOI identifies the exact source tag. The data DOI
-identifies immutable initial conditions and derived products.
+The publication consists of two coordinated, cross-linked records with
+different provenance:
 
-## Primary reproduction claim
+1. a data record for the preserved LOSS FOF/SUBFIND catalogues and merger-link
+   inputs produced by upstream GADGET-4;
+2. a software record for AsymptoticGadget4, the research fork that adds the
+   Turnaround and TurnLambda definitions.
 
-The essential release test is not merely that the small generated-IC example
-runs. A user must be able to download the exact archived LOSS initial
-conditions, verify them, initialize the tagged AsymptoticGadget4 executable
-from those files, and simulate forward. The group catalogues, trees, and link
-files are reference and analysis products; they are not prerequisites for
-ordinary time integration from the ICs.
+Reserve both DOI fields before publication and add the reciprocal related-
+identifier links together. Until then, repository metadata must retain DOI
+placeholders rather than inventing identifiers.
 
-The data record must therefore include a ready-to-run archived-IC parameter
-file in addition to the preserved production parameter file. Its
-`InitCondFile`, `ICFormat`, file-count settings, cosmology, units, starting
-time, and output schedule must match the deposited ICs without requiring a
-user to infer or regenerate missing values.
+## Provenance boundary
 
-## Required data products
+| Record | Producing source | Scientific contents |
+| --- | --- | --- |
+| LOSS halo catalogues | upstream GADGET-4 `1e171a4a679d30ac1e6accabe8a76a037ccbacac` plus each file's embedded `/Config` and `/Parameters` | Standard FOF/SUBFIND fields and Mean200, Crit200, Crit500, and TopHat200 SO definitions |
+| AsymptoticGadget4 software | release candidate based on official GADGET-4 `2046797b578a3be27433a23a9ba912715a829626`; validated code pin `8355241e142e264f93abfdb6ea36209bb2e877df` | Source capable of producing the added Turnaround/TurnLambda catalogue and tree fields in new runs |
 
-1. Exact initial-condition file, plus its SHA-256 checksum.
-2. `examples/LOSS` inputs: compile configuration, runtime parameters, output
-   epochs, power spectrum, and IC-generation seed/settings.
-3. Complete `groups_XXX/fof_subhalo_tab_XXX` hierarchy.
-4. Final `treedata/trees*` output.
-5. `subhalo_desc_*` and `subhalo_prog_*` inputs needed to repeat final tree
-   assembly, plus the resulting `subhalo_treelink_*` audit products, without
-   the full particle snapshot series.
-6. `parameters-usedvalues`, build/compiler/library information, launch layout,
-   and representative runtime logs.
-7. Machine-readable file inventory with byte sizes and SHA-256 checksums.
-8. A small validation product and expected schema/object-count summary.
-9. A ready-to-run archived-IC parameter file and a shorter acceptance-test
-   variant that writes an early validation checkpoint without changing the
-   preserved production configuration.
+The released catalogue files predate AsymptoticGadget4. They contain no
+Turnaround, TurnLambda, or stored Lagrangian-radius datasets and must never be
+described as outputs of the software record. See
+`18_loss_catalogue_data_dictionary.md` for the field-level schema.
 
-Full particle snapshots and restart files are optional. They are not required
-for the stated reproduction path when users can start from the archived ICs
-and the descendant/tree products are supplied.
+## Fixed data scope
 
-## Archived-IC acceptance test
+Five simulation archives contain only:
 
-Before publishing the data record:
+- `fof_subhalo_tab_000` through `fof_subhalo_tab_074`;
+- `subhalo_desc_000` through `subhalo_desc_073`;
+- `subhalo_prog_001` through `subhalo_prog_074`.
 
-1. verify every IC file against the published SHA-256 manifest after a clean
-   download and unpack;
-2. build the exact candidate software tag with the released LOSS `Config.sh`;
-3. start through the supplied archived-IC parameter file, without invoking
-   restartflag 6 or regenerating the ICs;
-4. confirm the logged format, file count, cosmology, units, starting time,
-   particle counts, particle types, and ID inventory against the manifest;
-5. advance beyond initialization to the early validation checkpoint and
-   verify that its particle fields are finite and its snapshot is readable;
-6. run FOF/SUBFIND at the validation output and verify the documented HDF5
-   schema, including the added turnaround fields;
-7. record the executable commit, dependency versions, MPI layout, resource
-   use, exit status, and output checksums or numerical summaries.
+Snapshot 074 is the uniform cap, with `a=100.0` and `z=-0.99` in all five
+simulations. The common epoch list assigns the same time to each snapshot index.
 
-Repeat this acceptance test on Apple Silicon macOS and at least one Linux
-x86-64 environment. Passing the generated-IC smoke test alone is insufficient
-for the publication claim.
+The data record intentionally excludes:
 
-The local thesis-workspace inventory found parameter files configured to
-generate their initial conditions at startup (`ICFormat=1`,
-`InitCondFile=./dummy.dat`) but did not find the exact archived raw IC files.
-That inventory is not evidence that the ICs are unavailable elsewhere; it
-means the archived-IC acceptance gate remains open until the deposited files
-and their matching parameter file are staged.
+- assembled merger trees, because restart flag 8 rebuilds them exactly from
+  the three shipped product families;
+- `subhalo_treelink`, because it is an output of that rebuild;
+- all particle snapshots and initial-condition files;
+- derived analysis products;
+- incompatible L32 `bak-*` links;
+- snapshots later than 074 in simulations that continued farther.
 
-The Linux/HPC execution and evidence-staging procedure is provided as a
-copy-paste handoff in `17_cluster_validation_handoff.md`. It pins an already
-CI-validated source commit, prohibits IC regeneration as substitute evidence,
-requires before/after IC checksums, and stops after a small validation
-checkpoint. This data-dependent workflow remains manual: the archived ICs and
-cluster credentials must never be placed in GitHub Actions.
+The `bak-*` exclusion is required for correctness: the backup links and live
+catalogue sequence are internally consistent sets but are mutually
+incompatible. Archives were therefore built from explicit file lists rather
+than by recursively packaging each source directory.
 
-## Preserved-catalogue tree regression
+The exact archived ICs remain preserved validation inputs outside this Zenodo
+catalogue record. The five IC sets were found and inventoried at 189.7 GB total;
+their absence from this record is an explicit scope choice, not a failed search.
+Consequently, this data record supports direct halo analysis and exact tree
+reassembly, but it is not a complete byte-for-byte initial-condition package
+for rerunning all five simulations from the beginning.
 
-Before depositing the reference trees, repeat tree assembly from the staged
-`fof_subhalo_tab_*`, `subhalo_desc_*`, and `subhalo_prog_*` inputs. Then run:
+## Completed validation
 
-```sh
-python3 tools/validate_loss_tree_fields.py STAGED_OUTPUT/treedata/trees.hdf5 \
-  --catalogue-dir STAGED_OUTPUT \
-  --expected-commit "$(git rev-parse HEAD)" \
-  --expected-fof-link-length 0.28 \
-  --output STAGED_OUTPUT/tree-field-validation.json
-```
+### Exact-IC software acceptance on Linux x86-64
 
-Deposit the JSON summary with the input and output manifests. A passing result
-shows exact field transfer and satellite initialization in the newly assembled
-trees; it does not replace comparison with a preserved historical final tree,
-which is needed to make a separate topology-equivalence claim.
+The pinned AsymptoticGadget4 candidate read the exact 256-cubed LOSS IC,
+advanced beyond initialization, wrote a checkpoint at `a=0.0105`, and reopened
+it successfully. All 16,777,216 type-1 particles and all eight particle
+datasets were present, finite, and ID-set exact; the mass table was preserved.
+The archived IC SHA-256 remained
+`c8966ce8611c78ec9e208a043f97c3cfdb59d81d67d1601e01e1db413855b25b`
+before and after the run. No IC-generation path was compiled or invoked.
 
-## Packaging
+This discharges the Linux integration gate for the tested IC. A macOS run and
+an exact-IC acceptance run on one 1024-cubed primary box remain separate release
+checks.
 
-Preserve the GADGET directory hierarchy in a small number of independently
-downloadable archives:
+### Production-scale tree rebuild
 
-- `loss-reproduction-inputs.tar.zst`
-- `loss-initial-conditions.tar.zst`
-- `loss-group-catalogues.tar.zst`
-- `loss-merger-trees-and-links.tar.zst`
-- `loss-validation-and-manifest.tar.zst`
+Restart flag 8 was tested on both storage layouts without particle snapshots:
 
-Before deposit, build the inventory from the repository root:
+| Simulation/layout | Rebuilt `Nhalos_Total` | Result |
+| --- | ---: | --- |
+| L512, flat files | 95,522,988 | exit 0; every catalogue subhalo represented; `LastSnapShotNr=74`; field validation pass |
+| L128, 16-piece files | 68,612,094 | exit 0; every catalogue subhalo represented; `LastSnapShotNr=74`; field validation pass |
 
-```sh
-python3 tools/build_release_manifest.py STAGED_DIRECTORY \
-  --output STAGED_DIRECTORY/MANIFEST.json
-```
+The release invariant is
+`Nhalos_Total == sum(Nsubhalos_Total for snapshots 000–074)`. In a multifile
+snapshot, `Nsubhalos_Total` is global and repeated in every piece, so it must be
+read once; only `Nsubhalos_ThisFile` is piece-local.
 
-After a clean download and unpack rehearsal, verify every file without
-rewriting the expected manifest:
+A preserved sandbox `trees.hdf5` was also checked and matches neither catalogue
+sequence currently on disk. It is an orphan artifact and is not used as a
+correctness oracle.
 
-```sh
-python3 tools/build_release_manifest.py STAGED_DIRECTORY \
-  --output STAGED_DIRECTORY/MANIFEST.json --verify
-```
+### Archive integrity
 
-At release time, recheck Zenodo's current record/file quota rather than relying
-on a hard-coded limit in this repository. If multiple simulation variants do
-not comfortably fit one record, use one linked data record per variant.
+Five gzip-compressed tar archives contain 7,805 files: 100.18 GB uncompressed
+and 40.08 GB compressed. Every archive was extracted into a clean location and
+all 7,805 files matched the pre-compression SHA-256 inventory, with zero scope
+leakage and exactly one top-level simulation directory per archive.
+
+`LOSS_RELEASE_MANIFEST.json` is the machine-readable release inventory. Its
+SHA-256 is
+`b4d02e6c92e37c95e3a6a587ff6c82c579454f56552c3272bb81446636b7249b`.
+It records per-archive sizes/hashes, every released file hash, provenance, scope,
+and the tree-rebuild invariant.
+
+## Draft upload and publication gates
+
+The archives may be transferred directly from the cluster to an unpublished
+Zenodo draft so the user does not need local disk for a 40 GB round trip. An
+unpublished draft is not a durable backup and must not be the only non-scratch
+copy. The irreversible Zenodo publish action requires separate explicit
+approval.
+
+The author must decide whether the five archives appear in one combined data
+record or five per-simulation records. Both layouts use the same immutable
+archives and manifest; the choice affects titles, citations, related
+identifiers, and upload scripting, not scientific scope.
+
+Before publication, obtain author approval for:
+
+- license for each record;
+- creator list, order, affiliations, ORCIDs, preferred citation, and contact;
+- combined versus per-simulation data-record layout;
+- first public software version;
+- the Tier C science statistic and tolerance, defined before running it;
+- intended fixed-amplitude/phase-matched use of seed `181170`;
+- exclusion of the other simulation suites from this release;
+- the macOS acceptance-test venue and result.
+
+## Tree rebuild and software relationship
+
+Users can rebuild native GADGET-4 `trees` and `subhalo_treelink` outputs by
+placing the three shipped input families under the configured output hierarchy
+and running restart flag 8 through snapshot 74. `full_tree*` is not a native
+GADGET-4 basename; it is a post-hoc rename and is not used in this record.
+
+The AsymptoticGadget4 candidate can read these upstream catalogues and transfers
+the nine available standard group/SO fields exactly. Because the four custom
+catalogue datasets are absent, the corresponding custom tree fields remain
+zero. Users who need scientifically measured Turnaround/TurnLambda values must
+run AsymptoticGadget4 FOF/SUBFIND from particle data; tree assembly cannot
+derive them from the standard catalogues.
 
 ## Scientific labelling
 
-Every catalogue manifest must record the exact source commit and
-`FOF_LINKLENGTH`. The LOSS reference value is 0.28. Products generated with
-0.2 are supported but scientifically distinct and must not be placed under the
-same version label.
+Every catalogue self-records `FOF_LINKLENGTH=0.28`, the upstream Git commit,
+runtime parameters, cosmology, and units. A rerun with link length 0.2 is a
+different halo definition and must not be labelled as reproducing this data
+record.

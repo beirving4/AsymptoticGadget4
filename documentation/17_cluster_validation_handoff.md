@@ -6,6 +6,14 @@ staging the evidence and data products needed for the Zenodo rehearsal. It is
 an acceptance run, not authorization to launch the full production simulation
 or upload a public data record.
 
+**Status:** the Linux x86-64 acceptance run was completed successfully. The
+pinned candidate read the exact 256-cubed IC, advanced to `a=0.0105`, wrote and
+reopened a finite checkpoint with exact particle-ID equality, and left the IC
+SHA-256 unchanged. This prompt is retained as the reproducible procedure. The
+current Zenodo data scope is the upstream standard-SO halo catalogues only; the
+ICs and candidate-produced acceptance output are validation evidence, not data-
+record contents.
+
 ## Pinned software candidate
 
 - repository: `beirving4/AsymptoticGadget4` (currently private);
@@ -138,7 +146,9 @@ G. Validate integration and catalogue output
   expected cosmology/units, and readable HDF5 metadata at the checkpoint.
 - Confirm FOF/SUBFIND output exists and contains Group_M_Turnaround,
   Group_R_Turnaround, Group_M_TurnLambda, and Group_R_TurnLambda, with no stored
-  R_Lag datasets. Record counts and numerical summaries.
+  R_Lag datasets. Record counts and numerical summaries. This validates what
+  the candidate produces; it does not describe the older standard-SO
+  catalogues being packaged for Zenodo.
 - If enough snapshots/link files exist, assemble trees with restartflag 8 and
   validate provenance and tree fields. Use tools/validate_loss_tree_fields.py
   only when the fixture contains satellite rows; otherwise use the smoke schema
@@ -147,12 +157,13 @@ G. Validate integration and catalogue output
   equal 0.28.
 
 H. Stage, manifest, and verify—do not upload
-- Stage immutable copies of the exact ICs, portable parameter/configuration
-  inputs, catalogues, trees and desc/prog/treelink files when available, logs,
-  environment/build evidence, validation summaries, and README instructions in
-  the product groups defined by documentation/13_loss_data_release.md.
-- Exclude unnecessary full snapshots and restart files unless the user approves
-  them for the data record. Never exclude the exact ICs or validation evidence.
+- Stage only the fixed data-record scope: `fof_subhalo_tab_000..074`,
+  `subhalo_desc_000..073`, and `subhalo_prog_001..074`, plus the release
+  manifest and public data dictionary. Build archives from explicit file lists.
+- Exclude ICs, particle snapshots, assembled trees, `subhalo_treelink`, derived
+  products, over-cap snapshots, and all `bak-*` files. Preserve the private IC
+  inventory and acceptance logs separately as validation evidence; do not copy
+  them into the catalogue record.
 - From the repository root run:
     python3 tools/build_release_manifest.py ZENODO_STAGE \
       --output ZENODO_STAGE/MANIFEST.json

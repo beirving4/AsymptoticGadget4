@@ -71,6 +71,30 @@ copy an existing `buildsystem/Makefile.path.*` file, define a site-specific
 `Generic-gcc` is the upstream profile for libraries staged inside this source
 tree; it is distinct from `Generic-system-gcc`.
 
+### Older glibc systems and RHEL/CentOS 7
+
+The default Linux shared-memory path uses `memfd_create`. Its glibc wrapper is
+available only in glibc 2.27 and newer; systems such as RHEL/CentOS 7 with glibc
+2.17 fail to compile that branch. Use GADGET-4's existing compile-time switch
+instead of patching `src/data/mymalloc.cc`:
+
+```text
+OLDSTYLE_SHARED_MEMORY_ALLOCATION
+```
+
+Add the option to the run's `Config.sh` before building. It selects the
+portable `shm_open()` path and keeps the pinned source unchanged.
+
+Under this old-style path, GADGET-4 reserves approximately `MaxMemSize` per MPI
+task up front in shared memory. `MaxMemSize` is a hard reservation, not a
+ceiling. Check the compute node's `/dev/shm` and RAM limits before submission,
+and leave substantial headroom when choosing ranks and `MaxMemSize`.
+
+Use the scheduler's supported MPI launcher for multinode work. On the tested
+RHEL-7-era cluster, `srun --mpi=pmi2` was required; bare `mpirun` could not
+launch across nodes. This launcher detail is site-specific and does not change
+the executable or scientific configuration.
+
 ## Smoke validation
 
 From `examples/LOSS-smoke`, run:
@@ -114,19 +138,27 @@ those optional inputs were absent and the new tree fields correctly retained
 zero sentinels. This run proves legacy catalogue compatibility, exact standard-
 field transfer, satellite initialization, and provenance serialization. It
 does not validate the numerical Turnaround/TurnLambda values against the
-historical science run, nor tree-topology equivalence against a preserved
-historical final tree; no such final tree was found in the local inventory.
+historical science run.
+
+A subsequent Linux/HPC regression tested the publication-scale layouts. Flag 8
+rebuilt L512's flat catalogues into 95,522,988 tree halos and L128's 16-piece
+catalogues into 68,612,094 tree halos, with `LastSnapShotNr=74`, exit status 0,
+and field-validator passes. In both cases `Nhalos_Total` equalled the sum of
+`Nsubhalos_Total` over the 75 catalogue snapshots. A preserved sandbox
+`trees.hdf5` was found, but it matches neither catalogue sequence now on disk;
+it is an orphan artifact and is not a topology oracle.
 
 ## Archived LOSS initial-condition validation
 
 The generated-IC smoke test checks the executable and output interfaces. The
-publication-critical test uses the exact archived thesis ICs and demonstrates
-that a user can initialize this tagged code from them and evolve forward.
+data-dependent test uses the exact archived thesis ICs and demonstrates that
+the tagged code can initialize from them and evolve forward. The ICs are
+preserved validation inputs but are intentionally outside the current Zenodo
+halo-catalogue record.
 
-The data release must provide checksums plus two ready-to-run parameter files:
-the preserved full production configuration and an acceptance-test variant
-that changes only the output location/schedule and stopping point needed to
-write an affordable early checkpoint. It must not regenerate the ICs.
+The Linux acceptance used a separate parameter-file variant that changed the
+output location/schedule and stopping point needed to write an affordable early
+checkpoint. It did not modify the preserved production input or regenerate ICs.
 
 The acceptance run passes only if the executable reads the complete IC set,
 logs the expected format, cosmology, units, starting time, particle counts and
@@ -136,9 +168,10 @@ catalogue with the documented custom schema. Record the source commit,
 parameter-file hash, IC manifest hash, platform and dependency versions, MPI
 layout, resource use, and numerical summaries.
 
-This archived-IC test must be run on Apple Silicon macOS and Linux x86-64
-before the public release. Group catalogues and merger trees are comparison and
-analysis products; they are not required to start ordinary forward evolution.
+The Linux x86-64 gate passed for the exact 256-cubed IC: 16,777,216 type-1
+particles were read, advanced, written at `a=0.0105`, and reopened with finite
+fields, exact ID-set equality, and an unchanged source checksum. The macOS gate
+and one 1024-cubed primary-box acceptance remain open before public release.
 
 ## Verification matrix
 
@@ -149,6 +182,7 @@ Status as of 2026-08-24:
 | Apple Silicon macOS, Apple Clang 17, Open MPI 5.0.7 | pass | pass at 1 and 2 ranks | not yet run | pass | pass | interface verified; archived IC pending |
 | Intel macOS | not run | not run | not run | not run | not run | expected, unverified |
 | Linux x86-64, GCC/Open MPI (GitHub-hosted Ubuntu) | pass in CI | pass at 2 ranks | not yet run | pass | pass | interface verified; archived IC pending |
+| Linux x86-64 HPC, glibc 2.17 | pass with `OLDSTYLE_SHARED_MEMORY_ALLOCATION` | not used | pass for exact 256-cubed IC | pass at validation checkpoint | production-scale flat and 16-piece rebuilds pass | exact-IC integration verified; 1024-cubed test pending |
 | Linux ARM64 | not run | not run | not run | not run | not run | source-compatible, unverified |
 | Other Unix/HPC systems | site profile required | not run | not run | not run | not run | unverified |
 
@@ -172,8 +206,9 @@ The first pushed release-candidate validation completed successfully in
 [GitHub Actions run 32731170450](https://github.com/beirving4/AsymptoticGadget4/actions/runs/32731170450).
 
 The CI smoke run generates reduced ICs and therefore cannot replace the
-archived LOSS IC acceptance test. That data-dependent test is run during the
-release rehearsal and its evidence is deposited with the LOSS data record.
+archived LOSS IC acceptance test. The Linux data-dependent rehearsal has now
+passed for the 256-cubed IC; its sanitized evidence accompanies the release
+documentation, while the IC itself is outside the halo-catalogue data record.
 
 ## Numerical comparison policy
 

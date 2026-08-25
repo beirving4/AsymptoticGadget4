@@ -13,6 +13,19 @@ identified upstream source state is
 extensions were ported onto current upstream rather than replacing current
 files with the historical copies.
 
+## Relationship to the LOSS catalogue data record
+
+The LOSS catalogue data record being prepared alongside this software is a
+separate provenance object. Its standard FOF/SUBFIND catalogues and
+descendant/progenitor link files were produced by upstream GADGET-4 commit
+`1e171a4a679d30ac1e6accabe8a76a037ccbacac`, not by AsymptoticGadget4. They do
+not contain the custom turnaround fields described below. The fork can read
+those standard catalogues and rebuild native `trees` products from their link
+files, but absent custom quantities cannot be reconstructed from the archived
+catalogue fields alone. See `documentation/18_loss_catalogue_data_dictionary.md`
+for the deposited schema and `documentation/13_loss_data_release.md` for the
+record boundary.
+
 ## Scientific extensions
 
 ### Turnaround spherical-overdensity definitions
@@ -86,9 +99,13 @@ copy checksums are recorded in `examples/LOSS/INPUTS.sha256`.
 - Current snapshot, catalogue, merger-tree, and tree-link output embeds the
   applicable `/Header`, `/Parameters`, and `/Config` metadata, including the
   source commit and run configuration needed to interpret the products.
-- Numerical equivalence with historical full-production runs must be
-  established by the planned small end-to-end and preserved-output regression
-  tests. Updating the upstream base is not claimed to be bitwise neutral.
+- The exact archived 256-cubed LOSS initial conditions pass the Linux/HPC
+  startup acceptance run with all particle IDs and required PartType1 datasets
+  preserved at the checkpoint. Production-scale native tree rebuilds also
+  pass for both flat and 16-piece standard-catalogue layouts.
+- These acceptance tests establish input compatibility and standard-field
+  transfer; updating the upstream base is still not claimed to be bitwise
+  neutral over a complete cosmological production run.
 
 ## Portable build profiles
 
@@ -98,6 +115,10 @@ copy checksums are recorded in `examples/LOSS/INPUTS.sha256`.
 - `Generic-system-gcc` uses `mpicxx` and libraries visible on the compiler's
   default include and link paths, as is common for Linux packages and HPC
   environment modules.
+- Linux systems with glibc older than 2.27 can select GADGET-4's existing
+  `OLDSTYLE_SHARED_MEMORY_ALLOCATION` option instead of the `memfd_create`
+  backend. Its shared-memory reservation follows `MaxMemSize` per MPI rank and
+  therefore needs scheduler-aware sizing.
 - Command-line `SYSTYPE=<name>` is normalized by the top-level Makefile, while
   the historical quoted values in `Makefile.systype` remain supported.
 

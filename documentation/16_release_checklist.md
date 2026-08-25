@@ -24,44 +24,60 @@ item remains unchecked.
 - [x] Add CI for Python helpers, Linux compilation, MPI smoke execution,
   FOF/SUBFIND, tree assembly, and schema validation.
 - [x] Observe the new CI workflow passing on the pushed release-candidate
-  branch ([run 32731170450](https://github.com/beirving4/AsymptoticGadget4/actions/runs/32731170450)).
+  branch ([run 32736885950](https://github.com/beirving4/AsymptoticGadget4/actions/runs/32736885950)).
 - [x] Run a real multi-subhalo fixture and confirm every group-only tree field
   is zero on satellite rows.
 - [x] Compare the nine legacy group/SO payload fields exactly between preserved
   historical catalogues and newly assembled trees.
-- [ ] Compare tree topology with a preserved historical final tree output,
-  defining exact and floating-point comparison levels in advance. No preserved
-  final tree was found in the local inventory.
+- [x] Rebuild production-scale trees from the flat L512 and 16-piece L128
+  layouts and verify `Nhalos_Total == sum(Nsubhalos_Total)` through snapshot 74.
+- [x] Establish that the preserved sandbox tree is an orphan that matches
+  neither live catalogue sequence and exclude it as a correctness oracle.
 
 ## Archived initial conditions and LOSS data
 
-- [ ] Stage the exact LOSS initial-condition files and record SHA-256, byte
+- [x] Stage the five exact LOSS initial-condition sets and record SHA-256, byte
   size, format, file count, particle inventory, and creation provenance.
 - [ ] Create a ready-to-run production parameter file for the archived ICs.
-- [ ] Create a short archived-IC acceptance parameter file without modifying
+- [x] Create a short archived-IC acceptance parameter file without modifying
   the preserved production configuration.
 - [ ] From a clean download, initialize and advance the archived ICs to a
   readable validation checkpoint on Apple Silicon macOS.
-- [ ] Repeat the archived-IC acceptance run on Linux x86-64.
+- [x] Initialize and advance the exact 256-cubed IC on Linux x86-64; reopen the
+  checkpoint with finite fields and exact particle-ID equality.
+- [ ] Repeat Tier A on one 1024-cubed primary IC set.
 - [x] Add a pinned Linux/HPC handoff that protects the original ICs, captures
   platform/resource evidence, and stages a verified Zenodo manifest.
-- [ ] Execute that handoff on the cluster and verify the original IC checksums
+- [x] Execute that handoff on the cluster and verify the original IC checksums
   before and after the acceptance run.
-- [ ] Validate the first snapshot and FOF/SUBFIND catalogue and record resource
+- [x] Validate the first snapshot and FOF/SUBFIND catalogue and record resource
   use, dependency versions, hashes, and numerical summaries.
-- [ ] Package and verify catalogues, trees, descendant/tree-link files,
-  manifests, configurations, and representative logs as described in
-  `13_loss_data_release.md`.
+- [x] Package the fixed catalogue/descendant/progenitor scope into five
+  archives and byte-verify all 7,805 files after clean extraction.
+- [ ] Copy the five archives and manifest from purgeable scratch to durable
+  group storage; an unpublished Zenodo draft is not a backup.
+- [ ] Rehearse the 216 MB sandbox archive upload on Zenodo's sandbox service.
+- [ ] Upload the five immutable archives and manifest to an unpublished Zenodo
+  draft. Do not invoke the irreversible publish action without sign-off.
 
 ## Documentation, citation, and release metadata
 
 - [x] Identify the project prominently as an unofficial research fork of
   GADGET-4 developed for thesis work with the LOSS simulations.
 - [x] Document macOS/Unix builds, custom output schema, Graphify limitations,
-  and the archived-IC reproduction path.
+  exact-IC validation, and the fixed halo-catalogue release scope.
+- [x] Add the released HDF5 data dictionary with types, units, scale-factor and
+  `h` conversions, sentinels, multifile indexing, and link semantics.
 - [x] Add draft `CITATION.cff`, authorship, changelog, and contribution files.
+- [ ] Author selects the software and data-record licenses.
 - [ ] Author confirms name spelling, contributor order, institution, thesis
   title/link, ORCID, preferred citation, and contact route.
+- [ ] Author chooses one combined data record or five per-simulation records.
+- [ ] Author confirms that seed `181170` intentionally defines the shared
+  phase-matched, fixed-amplitude design.
+- [ ] Author confirms that all other simulation suites are out of scope for
+  this release and records whether they are candidates for later deposits.
+- [ ] Define the Tier C science statistic and tolerance before running it.
 - [ ] Choose the first public semantic version and add it to `CITATION.cff`.
 - [ ] Reserve and add the software and LOSS data DOIs; cross-link both records.
 - [x] Validate the DOI-free draft `CITATION.cff` against CFF 1.2.0.
